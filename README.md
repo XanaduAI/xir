@@ -1,5 +1,5 @@
 <p align="center">
-  <img height=65 alt="XIR" src="docs/_static/xir_title.svg">
+  <img height=65 alt="XIR" src="https://raw.githubusercontent.com/XanaduAI/xir/main/docs/_static/xir_title.svg">
 </p>
 
 
