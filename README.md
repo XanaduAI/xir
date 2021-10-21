@@ -26,7 +26,7 @@ pip install quantum-xir
 
 ## Examples
 
-A curated selection of XIR scripts can be found in the [Examples](docs/use/examples.rst) page of the Sphinx documentation; however, the example below demonstrates a general overview of the syntax:
+A curated selection of XIR scripts can be found in the [Examples](https://xir.readthedocs.io/en/latest/use/examples.html) page of the Sphinx documentation; however, the example below demonstrates a general overview of the syntax:
 
 ```
 // Include additional script
@@ -78,12 +78,13 @@ amplitude(state: [0, 1, 0, 1, 0, 0, 1, 1]) | [0..8];
 We welcome contributions - simply fork the XIR repository, and then make a [pull
 request](https://help.github.com/articles/about-pull-requests/) containing your
 contribution. All contributors to XIR will be listed as authors on the releases.
-See our [changelog](.github/CHANGELOG.md) for more details.
+See our [changelog](https://github.com/XanaduAI/xir/blob/main/.github/CHANGELOG.md)
+for more details.
 
 We also encourage bug reports, suggestions for new features and enhancements,
 and even links to cool projects or applications built on XIR. Visit the [contributions
-page](.github/CONTRIBUTING.md) to learn more about sharing your ideas with the
-XIR team.
+page](https://github.com/XanaduAI/xir/blob/main/.github/CONTRIBUTING.md)
+to learn more about sharing your ideas with the XIR team.
 
 ## Support
 
