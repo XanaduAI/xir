@@ -181,6 +181,7 @@ class Transformer(lark.Transformer):
         params = []
         stmts = []
 
+        max_wire = 0
         has_declared_wires = False
         for i, arg in enumerate(args):
             if is_param(arg):
@@ -192,10 +193,17 @@ class Transformer(lark.Transformer):
                 if has_declared_wires:
                     stmts = args[i:]
                     break
-
                 stmts.append(arg)
-                for w in arg.wires:
-                    wires += (w,) if w not in wires else ()
+
+                only_int_wires = all(isinstance(w, int) for w in arg.wires)
+                if only_int_wires and max(arg.wires) > max_wire:
+                    wires += tuple(arg.wires)
+                    max_wire = max(arg.wires)
+
+            if not has_declared_wires:
+                wires = tuple(range(max_wire + 1))
+            else:
+                wires = tuple(dict.fromkeys(wires))
 
         self._program.add_gate(name, params, wires, stmts)
 
@@ -206,19 +214,34 @@ class Transformer(lark.Transformer):
         params = []
         stmts = []
 
+        max_wire = 0
+        has_declared_wires = False
         for i, arg in enumerate(args):
             if is_param(arg):
                 params = arg[1]
             elif is_wire(arg):
                 wires = arg[1]
+                has_declared_wires = True
             elif isinstance(arg, ObservableStmt):
-                stmts = args[i:]
-                break
+                if has_declared_wires:
+                    stmts = args[i:]
+                    break
+                stmts.append(arg)
+
+                only_int_wires = all(isinstance(w, int) for w in arg.wires)
+                if only_int_wires and max(arg.wires) > max_wire:
+                    wires += tuple(arg.wires)
+                    max_wire = max(arg.wires)
+
+            if not has_declared_wires:
+                wires = tuple(range(max_wire + 1))
+            else:
+                wires = tuple(dict.fromkeys(wires))
 
         self._program.add_observable(name, params, wires, stmts)
 
     def application_stmt(self, args):
-        """Application statement. Can be either a gate statment or an output statement and is
+        """Application statement. Can be either a gate statement or an output statement and is
         defined either directly in the circuit or inside a gate definition.
 
         Returns:

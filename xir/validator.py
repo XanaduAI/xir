@@ -119,6 +119,9 @@ class Validator:
         Raises:
             ValidationError: if any issues are found and ``raise_exception`` is ``True``
         """
+        # reset validation messages in case previously run
+        self._validation_messages = []
+
         if self._validators["declarations"]:
             self._check_declarations()
 
@@ -337,27 +340,22 @@ class Validator:
         declared_params: Sequence[Param],
     ) -> None:
         """Checks the names, wires, and parameters for both observable and gate definitions."""
-        if declared_wires and all(isinstance(w, str) for w in declared_wires):
-            if any(isinstance(w, int) for w in applied_wires):
-                msg = (
-                    f"Definition '{name}' is invalid. Only named wires can be applied when "
-                    "declaring named wires."
-                )
-                self._validation_messages.append(msg)
+        any_integer_applied_wires = any(isinstance(w, int) for w in applied_wires)
+        all_string_declared_wires = all(isinstance(w, str) for w in declared_wires)
 
-            if set(applied_wires) != set(declared_wires):
-                applied = ", ".join(map(str, applied_wires))
-                declared = ", ".join(map(str, declared_wires))
-                msg = (
-                    f"Definition '{name}' is invalid. Applied wires [{applied}] differ "
-                    f"from declared wires [{declared}]."
-                )
-                self._validation_messages.append(msg)
-
-        elif not all(isinstance(w, int) for w in applied_wires):
+        if any_integer_applied_wires and all_string_declared_wires:
             msg = (
-                f"Definition '{name}' is invalid. Only integer wires can be applied when "
-                "not declaring wires."
+                f"Definition '{name}' is invalid. Only named wires can be applied when "
+                "declaring named wires."
+            )
+            self._validation_messages.append(msg)
+
+        if not set(applied_wires).issubset(set(declared_wires)):
+            applied = ", ".join(map(str, applied_wires))
+            declared = ", ".join(map(str, declared_wires))
+            msg = (
+                f"Definition '{name}' is invalid. Applied wires [{applied}] differ "
+                f"from declared wires [{declared}]."
             )
             self._validation_messages.append(msg)
 
