@@ -257,11 +257,11 @@ class TestValidatorIntegration:
                 ],
             ),
             (
-                "gate MyGate: BSgate(0.1, 0.2) | [0, a]; end;",
+                "gate MyGate: BSgate(0.1, 0.2) | [2, a]; end;",
                 [
                     (
-                        "Definition 'MyGate' is invalid. Applied wires [0, a] differ from "
-                        "declared wires [0]."
+                        "Definition 'MyGate' is invalid. Applied wires [2, a] differ from "
+                        "declared wires [0, 1, 2]."
                     )
                 ],
             ),
