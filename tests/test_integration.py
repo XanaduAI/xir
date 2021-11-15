@@ -40,7 +40,7 @@ gate h(x)[a, b, c]:
     // rx(pi / sin(3 * 4 / 2 - 2)) | [b, c];
 end;
 
-obs o(a):
+obs o(a)[0, 1]:
     sin(a), X[0] @ Z[1];
     -1.6, Y[0];
     2.45, Y[0] @ X[1];
