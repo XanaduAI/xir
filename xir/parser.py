@@ -195,10 +195,10 @@ class Transformer(lark.Transformer):
                     break
                 stmts.append(arg)
 
-                only_int_wires = all(isinstance(w, int) for w in arg.wires)
-                if only_int_wires and max(arg.wires) > max_wire:
-                    wires += tuple(arg.wires)
-                    max_wire = max(arg.wires)
+                int_wires = [w for w in arg.wires if isinstance(w, int)]
+                wires += tuple(arg.wires)
+                if int_wires and max(int_wires) > max_wire:
+                    max_wire = max(int_wires)
 
             if not has_declared_wires:
                 wires = tuple(range(max_wire + 1))
@@ -228,10 +228,10 @@ class Transformer(lark.Transformer):
                     break
                 stmts.append(arg)
 
-                only_int_wires = all(isinstance(w, int) for w in arg.wires)
-                if only_int_wires and max(arg.wires) > max_wire:
-                    wires += tuple(arg.wires)
-                    max_wire = max(arg.wires)
+                int_wires = [w for w in arg.wires if isinstance(w, int)]
+                wires += tuple(arg.wires)
+                if int_wires and max(int_wires) > max_wire:
+                    max_wire = max(int_wires)
 
             if not has_declared_wires:
                 wires = tuple(range(max_wire + 1))
