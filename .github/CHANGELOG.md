@@ -1,17 +1,17 @@
-## Release 0.2.0 (development release)
+## Release 0.1.1 (development release)
 
 ### New features since last release
 
 ### Improvements
 
 * The maximum wire value used in a statement within a definition will be the number of wires
-  declared. E.g., if, within a definition, a single statement is applied on wire 4, then the
+  declared. For example, if a single statement within a definition is applied to wire 4, then the
   declared wires will be 0, 1, 2, 3, and 4.
   [(#2)](https://github.com/XanaduAI/xir/pull/2)
 
 ### Bug Fixes
 
-* Wires are implicitly added to the declaration if not explicitly declared in a definition.
+* Wires are implicitly added to an observable if they are not explicitly declared.
   [(#2)](https://github.com/XanaduAI/xir/pull/2)
 
 * Validation now checks that applied wires is a subset of declared wires.
