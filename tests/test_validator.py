@@ -61,19 +61,10 @@ class TestValidatorIntegration:
             + r"$"  # match no more matches
         )
 
-    @pytest.mark.parametrize(
-        "decl, matches",
-        [
-            (
-                "gate cnot[0, 0];",
-                [
-                    "Declaration 'gate cnot[0, 0]' has duplicate wires labels.",
-                ],
-            ),
-        ],
-    )
     def test_message_reset(self, decl, matches):
         """Tests that validator messages are reset between different runs."""
+        decl = "gate cnot[0, 0];"
+        matches = ["Declaration 'gate cnot[0, 0]' has duplicate wires labels."]
 
         match = self._create_full_match(matches)
         with pytest.raises(xir.validator.ValidationError, match=match):

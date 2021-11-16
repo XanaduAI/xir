@@ -196,7 +196,6 @@ class Transformer(lark.Transformer):
                 stmts.append(arg)
 
                 int_wires = [w for w in arg.wires if isinstance(w, int)]
-                wires += tuple(arg.wires)
                 if int_wires and max(int_wires) > max_wire:
                     max_wire = max(int_wires)
 
@@ -229,7 +228,6 @@ class Transformer(lark.Transformer):
                 stmts.append(arg)
 
                 int_wires = [w for w in arg.wires if isinstance(w, int)]
-                wires += tuple(arg.wires)
                 if int_wires and max(int_wires) > max_wire:
                     max_wire = max(int_wires)
 

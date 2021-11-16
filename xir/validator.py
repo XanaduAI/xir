@@ -350,7 +350,7 @@ class Validator:
             )
             self._validation_messages.append(msg)
 
-        if not set(applied_wires).issubset(set(declared_wires)):
+        if set(applied_wires) - set(declared_wires):
             applied = ", ".join(map(str, applied_wires))
             declared = ", ".join(map(str, declared_wires))
             msg = (

@@ -184,6 +184,11 @@ class TestParser:
                 "gate MultiRot(x, y, z): RX(x) | [0]; RY(y) | [1]; RZ(z) | [2]; end;",
                 (0, 1, 2),
             ),
+            # Reverse order of the above.
+            (
+                "gate MultiRot(x, y, z): RX(x) | [2]; RY(y) | [1]; RZ(z) | [0]; end;",
+                (0, 1, 2),
+            ),
             (
                 "gate MultiRot(x, y, z): RX(x) | [0]; RY(y) | [1]; RZ(z) | [1]; end;",
                 (0, 1),
