@@ -61,6 +61,21 @@ class TestValidatorIntegration:
             + r"$"  # match no more matches
         )
 
+    def test_message_reset(self):
+        """Tests that validator messages are reset between different runs."""
+        decl = "gate cnot[0, 0];"
+        matches = ["Declaration 'gate cnot[0, 0]' has duplicate wires labels."]
+
+        match = self._create_full_match(matches)
+        with pytest.raises(xir.validator.ValidationError, match=match):
+            program = xir.parse_script(decl)
+            xir.Validator(program).run()
+
+        # run it again to make sure the issue messages don't "pile up"
+        with pytest.raises(xir.validator.ValidationError, match=match):
+            program = xir.parse_script(decl)
+            xir.Validator(program).run()
+
     @pytest.mark.parametrize(
         "decl, matches",
         [
@@ -89,8 +104,8 @@ class TestValidatorIntegration:
 
         match = self._create_full_match(matches)
         with pytest.raises(xir.validator.ValidationError, match=match):
-            irprog = xir.parse_script(decl)
-            xir.Validator(irprog).run()
+            program = xir.parse_script(decl)
+            xir.Validator(program).run()
 
     @pytest.mark.parametrize(
         "stmt, matches",
@@ -175,8 +190,8 @@ class TestValidatorIntegration:
 
         match = self._create_full_match(matches)
         with pytest.raises(xir.validator.ValidationError, match=match):
-            irprog = xir.parse_script(script)
-            xir.Validator(irprog).run()
+            program = xir.parse_script(script)
+            xir.Validator(program).run()
 
     def test_check_recursive_defs(self):
         """Test that recursively defined definitions raise the correct exceptions."""
@@ -184,11 +199,11 @@ class TestValidatorIntegration:
         script = inspect.cleandoc(
             """
             gate MooGate:
-                MyGate | [0, 2];
+                MyGate | [0, 1];
             end;
 
             gate MyGate:
-                MooGate | [0, 2];
+                MooGate | [0, 1];
             end;
             """
         )
@@ -200,8 +215,8 @@ class TestValidatorIntegration:
 
         match = self._create_full_match(matches)
         with pytest.raises(xir.validator.ValidationError, match=match):
-            irprog = xir.parse_script(script)
-            xir.Validator(irprog).run()
+            program = xir.parse_script(script)
+            xir.Validator(program).run()
 
     @pytest.mark.parametrize(
         "stmt, matches",
@@ -233,11 +248,11 @@ class TestValidatorIntegration:
                 ],
             ),
             (
-                "gate MyGate: BSgate(0.1, 0.2) | [0, a]; end;",
+                "gate MyGate: BSgate(0.1, 0.2) | [2, a]; end;",
                 [
                     (
-                        "Definition 'MyGate' is invalid. Only integer wires can be applied when "
-                        "not declaring wires."
+                        "Definition 'MyGate' is invalid. Applied wires [2, a] differ from "
+                        "declared wires [0, 1, 2]."
                     )
                 ],
             ),
@@ -250,8 +265,8 @@ class TestValidatorIntegration:
 
         match = self._create_full_match(matches)
         with pytest.raises(xir.validator.ValidationError, match=match):
-            irprog = xir.parse_script(script)
-            xir.Validator(irprog).run()
+            program = xir.parse_script(script)
+            xir.Validator(program).run()
 
     @pytest.mark.parametrize(
         "stmt, matches",
@@ -286,8 +301,8 @@ class TestValidatorIntegration:
                 "obs MyObs: 4.2, X[a] @ Y[0]; end;",
                 [
                     (
-                        "Definition 'MyObs' is invalid. Only integer wires can be applied when "
-                        "not declaring wires."
+                        "Definition 'MyObs' is invalid. Applied wires [a, 0] differ from declared "
+                        "wires [0]."
                     )
                 ],
             ),
@@ -320,8 +335,8 @@ class TestValidatorIntegration:
         stmt = "obs X[0];obs Y[0];obs Z[0];" + stmt
         match = self._create_full_match(matches)
         with pytest.raises(xir.validator.ValidationError, match=match):
-            irprog = xir.parse_script(stmt)
-            xir.Validator(irprog).run()
+            program = xir.parse_script(stmt)
+            xir.Validator(program).run()
 
     @pytest.mark.parametrize(
         "validators, matches",
@@ -388,7 +403,7 @@ class TestValidatorIntegration:
                 MooGate | [0, 2];
             end;
 
-            gate MooGate:
+            gate MooGate[0, 2]:
                 MyGate | [0, 2];  // circular dependency
             end;
 
@@ -398,8 +413,8 @@ class TestValidatorIntegration:
 
         match = self._create_full_match(matches)
         with pytest.raises(xir.validator.ValidationError, match=match):
-            irprog = xir.parse_script(script)
+            program = xir.parse_script(script)
 
-            val = xir.Validator(irprog)
+            val = xir.Validator(program)
             val._validators.update(validators)  # pylint: disable=protected-access
             val.run()
