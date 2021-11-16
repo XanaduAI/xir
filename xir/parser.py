@@ -202,6 +202,7 @@ class Transformer(lark.Transformer):
             if not has_declared_wires:
                 wires = tuple(range(max_wire + 1))
             else:
+                # remove duplicate wires while maintaining order
                 wires = tuple(dict.fromkeys(wires))
 
         self._program.add_gate(name, params, wires, stmts)

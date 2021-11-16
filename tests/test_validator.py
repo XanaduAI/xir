@@ -61,7 +61,7 @@ class TestValidatorIntegration:
             + r"$"  # match no more matches
         )
 
-    def test_message_reset(self, decl, matches):
+    def test_message_reset(self):
         """Tests that validator messages are reset between different runs."""
         decl = "gate cnot[0, 0];"
         matches = ["Declaration 'gate cnot[0, 0]' has duplicate wires labels."]
