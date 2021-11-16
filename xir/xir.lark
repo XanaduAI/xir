@@ -25,7 +25,7 @@ application_stmt: (INVERSE | (CTRL wires))* name params? "|" wires ";"
 // observables
 obs_def: _OP name params_list? wires? ":" obs_stmt+ _END ";"
 obs_stmt: expr "," obs_group ";"
-obs_group: obs "[" wire "]" ("@" obs "[" wire "]")*
+obs_group: obs params_list? "[" wire "]" ("@" obs params_list? "[" wire "]")*
 ?obs: name
 
 // wires and parameters

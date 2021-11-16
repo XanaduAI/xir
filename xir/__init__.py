@@ -1,10 +1,10 @@
 from ._version import __version__
 from .decimal_complex import DecimalComplex
 from .parser import Transformer, parser
-from .program import Declaration, ObservableStmt, Program, Statement
+from .program import Declaration, ObservableStmt, Program, Statement, ObservableFactor
 from .validator import Validator
 
-__all__ = ["DecimalComplex", "Declaration", "ObservableStmt", "Program", "Statement", "Transformer"]
+__all__ = ["DecimalComplex", "Declaration", "ObservableStmt", "Program", "Statement", "Transformer", "ObservableFactor"]
 
 
 def parse_script(script: str, **kwargs) -> Program:

@@ -6,7 +6,7 @@ from pathlib import Path
 import lark
 
 from .decimal_complex import DecimalComplex
-from .program import Declaration, ObservableStmt, Program, Statement
+from .program import Declaration, ObservableStmt, Program, Statement, ObservableFactor
 from .utils import simplify_math
 
 
@@ -261,7 +261,17 @@ class Transformer(lark.Transformer):
         """
         pref = simplify_math(args[0])
         terms = args[1]
-        return ObservableStmt(pref, terms, use_floats=self.use_floats)
+
+        factors = []
+        for factor in args[1]:
+            if len(factor) == 3:
+                name, params, wires = factor
+                factors.append(ObservableFactor(name=name, params=params, wires=wires))
+            else:
+                name, wires = factor
+                factors.append(ObservableFactor(name=name, params=[], wires=wires))
+
+        return ObservableStmt(pref, factors, use_floats=self.use_floats)
 
     def obs_group(self, args):
         """Group of observables used to define an observable statement.
@@ -269,7 +279,20 @@ class Transformer(lark.Transformer):
         Returns:
             list[tuple]: each observable with corresponding wires as tuples
         """
-        return [(args[i], args[i + 1]) for i in range(0, len(args) - 1, 2)]
+        def arg_gen():
+            args_iterator = iter(args)
+            while True:
+                try:
+                    obs = next(args_iterator)
+                except StopIteration:
+                    break
+                arg = next(args_iterator)
+                if not is_param(arg):
+                    yield obs, arg
+                else:
+                    yield obs, arg, next(args_iterator)
+
+        return list(arg_gen())
 
     ################
     # declarations

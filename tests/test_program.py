@@ -418,7 +418,7 @@ class TestProgram:
         x = {
             "params": [],
             "wires": [0],
-            "statements": [xir.ObservableStmt(pref=1, terms=[("X", 0)])],
+            "statements": [xir.ObservableStmt(pref=1, factors=[("X", 0)])],
         }
         program.add_observable("X", **x)
 
@@ -428,7 +428,7 @@ class TestProgram:
         y = {
             "params": [],
             "wires": [1],
-            "statements": [xir.ObservableStmt(pref=2, terms=[("Y", 0)])],
+            "statements": [xir.ObservableStmt(pref=2, factors=[("Y", 0)])],
         }
         program.add_observable("Y", **y)
 

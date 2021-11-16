@@ -137,27 +137,37 @@ class Statement:
         return self._use_floats
 
 
+class ObservableFactor:
+
+    def __init__(self, name, params, wires):
+        self.name = name
+        self.params = params
+        self.wires = wires
+
+
 class ObservableStmt:
     """Observable statements to be used in observable definitions.
 
     Args:
         pref (Decimal, int, str): prefactor to the observable terms
-        terms (list): list of observables and the wire(s) they are applied to
+        factors (list): list of observables and the wire(s) they are applied to
     """
 
-    def __init__(self, pref: Union[Decimal, int, str], terms: List, use_floats: bool = True):
+    def __init__(self, pref: Union[Decimal, int, str], factors: List[ObservableFactor], use_floats: bool = True):
         self._pref = pref
-        self._terms = terms
+        self._factors = factors
 
         self._use_floats = use_floats
 
     def __str__(self) -> str:
         """Serialized string representation of an ObservableStmt."""
-        terms = [f"{t[0]}[{t[1]}]" for t in self.terms]
-        terms_as_string = " @ ".join(terms)
+        factors = [
+            f"{f.name}[{f.wires}]" if len(f.params) == 0 else f"{f.name}({', '.join([str(v) for v in f.params])})[{f.wires}]" for f in self.factors
+        ]
+        factors_as_string = " @ ".join(factors)
         pref = str(self.pref)
 
-        return f"{pref}, {terms_as_string}"
+        return f"{pref}, {factors_as_string}"
 
     @property
     def pref(self) -> Union[Decimal, float, int, str]:
@@ -167,9 +177,9 @@ class ObservableStmt:
         return self._pref
 
     @property
-    def terms(self) -> List:
+    def factors(self) -> List:
         """Returns the terms in this observable statement."""
-        return self._terms
+        return self._factors
 
     @property
     def use_floats(self) -> bool:
@@ -179,7 +189,7 @@ class ObservableStmt:
     @property
     def wires(self) -> Sequence[Wire]:
         """Returns the wires this observable statement is applied to."""
-        return tuple(wires for _, wires in self.terms)
+        return tuple(wires for _, wires in self.factors)
 
 
 class Declaration:
