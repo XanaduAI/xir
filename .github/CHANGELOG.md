@@ -14,8 +14,7 @@
 * Wires are implicitly added to the declaration if not explicitly declared in a definition.
   [(#2)](https://github.com/XanaduAI/xir/pull/2)
 
-* Validation now checks that applied wires is a subset of declared wires (they don't need to be
-  equal).
+* Validation now checks that applied wires is a subset of declared wires.
   [(#2)](https://github.com/XanaduAI/xir/pull/2)
 
 ### Documentation
