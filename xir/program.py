@@ -142,7 +142,10 @@ class ObservableFactor:
     def __init__(self, name, params, wires):
         self.name = name
         self.params = params
-        self.wires = wires
+        if isinstance(wires, list) and len(wires) == 1:
+          self.wires = wires[0]
+        else:
+          self.wires = wires
 
 
 class ObservableStmt:
