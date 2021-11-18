@@ -260,18 +260,12 @@ class Transformer(lark.Transformer):
             ObservableStmt: object containing statement data
         """
         pref = simplify_math(args[0])
-        terms = args[1]
-
-        factors = []
-        for factor in args[1]:
-            if len(factor) == 3:
-                name, params, wires = factor
-                factors.append(ObservableFactor(name=name, params=params, wires=wires))
-            else:
-                name, wires = factor
-                factors.append(ObservableFactor(name=name, params=[], wires=wires))
-
-        return ObservableStmt(pref, factors, use_floats=self.use_floats)
+        factors = args[1]
+        return ObservableStmt(
+            pref,
+            [ObservableFactor(*factor) for factor in factors],
+            use_floats=self.use_floats
+        )
 
     def obs_group(self, args):
         """Group of observables used to define an observable statement.
@@ -279,20 +273,19 @@ class Transformer(lark.Transformer):
         Returns:
             list[tuple]: each observable with corresponding wires as tuples
         """
-        def arg_gen():
-            args_iterator = iter(args)
-            while True:
-                try:
-                    obs = next(args_iterator)
-                except StopIteration:
-                    break
-                arg = next(args_iterator)
-                if not is_param(arg):
-                    yield obs, arg
-                else:
-                    yield obs, arg, next(args_iterator)
-
-        return list(arg_gen())
+        obs_group_list = []
+        args_iterator = iter(args)
+        while True:
+            try:
+                obs = next(args_iterator)
+            except StopIteration:
+                break
+            arg = next(args_iterator)
+            if not is_param(arg):
+                obs_group_list.append((obs, [], arg))
+            else:
+                obs_group_list.append((obs, arg, next(args_iterator)))
+        return obs_group_list
 
     ################
     # declarations
