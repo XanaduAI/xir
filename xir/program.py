@@ -139,16 +139,16 @@ class Statement:
 
 class ObservableFactor:
 
-    def __init__(self, name, params, wires):
+    def __init__(self, name: str, params: [], wires: [int]):
         self.name = name
         self.params = params
         self.wires = wires
 
     def __str__(self):
         if len(self.params) == 0:
-            return f"{self.name}[{self.wires}]"
+            return f"{self.name}{self.wires}"
         else:
-            return f"{self.name}({', '.join([str(v) for v in self.params])})[{self.wires}]"
+            return f"{self.name}({', '.join([str(v) for v in self.params])}){self.wires}"
 
 
 class ObservableStmt:

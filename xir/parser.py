@@ -282,9 +282,9 @@ class Transformer(lark.Transformer):
                 break
             arg = next(args_iterator)
             if not is_param(arg):
-                obs_group_list.append((obs, [], arg))
+                obs_group_list.append((obs, [], arg[1]))
             else:
-                obs_group_list.append((obs, arg[1], next(args_iterator)))
+                obs_group_list.append((obs, arg[1], next(args_iterator)[1]))
         return obs_group_list
 
     ################
