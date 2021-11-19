@@ -142,10 +142,13 @@ class ObservableFactor:
     def __init__(self, name, params, wires):
         self.name = name
         self.params = params
-        if isinstance(wires, list) and len(wires) == 1:
-          self.wires = wires[0]
+        self.wires = wires
+
+    def __str__(self):
+        if len(self.params) == 0:
+            return f"{self.name}[{self.wires}]"
         else:
-          self.wires = wires
+            return f"{self.name}({', '.join([str(v) for v in self.params])})[{self.wires}]"
 
 
 class ObservableStmt:
@@ -164,10 +167,7 @@ class ObservableStmt:
 
     def __str__(self) -> str:
         """Serialized string representation of an ObservableStmt."""
-        factors = [
-            f"{f.name}[{f.wires}]" if len(f.params) == 0 else f"{f.name}({', '.join([str(v) for v in f.params])})[{f.wires}]" for f in self.factors
-        ]
-        factors_as_string = " @ ".join(factors)
+        factors_as_string = " @ ".join([str(factor) for factor in self._factors])
         pref = str(self.pref)
 
         return f"{pref}, {factors_as_string}"
