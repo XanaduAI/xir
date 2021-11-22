@@ -262,9 +262,7 @@ class Transformer(lark.Transformer):
         pref = simplify_math(args[0])
         factors = args[1]
         return ObservableStmt(
-            pref,
-            [ObservableFactor(*factor) for factor in factors],
-            use_floats=self.use_floats
+            pref, [ObservableFactor(*factor) for factor in factors], use_floats=self.use_floats
         )
 
     def obs_group(self, args):

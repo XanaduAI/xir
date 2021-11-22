@@ -4,7 +4,15 @@ from .parser import Transformer, parser
 from .program import Declaration, ObservableStmt, Program, Statement, ObservableFactor
 from .validator import Validator
 
-__all__ = ["DecimalComplex", "Declaration", "ObservableStmt", "Program", "Statement", "Transformer", "ObservableFactor"]
+__all__ = [
+    "DecimalComplex",
+    "Declaration",
+    "ObservableStmt",
+    "Program",
+    "Statement",
+    "Transformer",
+    "ObservableFactor",
+]
 
 
 def parse_script(script: str, **kwargs) -> Program:

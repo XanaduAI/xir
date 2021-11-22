@@ -138,7 +138,6 @@ class Statement:
 
 
 class ObservableFactor:
-
     def __init__(self, name: str, params: [], wires: [int]):
         self.name = name
         self.params = params
@@ -159,7 +158,12 @@ class ObservableStmt:
         factors (list): list of observables and the wire(s) they are applied to
     """
 
-    def __init__(self, pref: Union[Decimal, int, str], factors: List[ObservableFactor], use_floats: bool = True):
+    def __init__(
+        self,
+        pref: Union[Decimal, int, str],
+        factors: List[ObservableFactor],
+        use_floats: bool = True,
+    ):
         self._pref = pref
         self._factors = factors
 
