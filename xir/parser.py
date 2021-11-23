@@ -303,7 +303,7 @@ class Transformer(lark.Transformer):
     def obs_decl(self, args):
         """Observable declaration. Adds declaration to program."""
         if len(args) == 3:
-            name, params, wires = args[0], args[1][1], args[2][1]
+            name, params, wires = args[0], args[1][1], args[2].children
         else:
             name, wires = args[0], args[1][1]
             params = []
