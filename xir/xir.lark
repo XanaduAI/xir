@@ -13,8 +13,8 @@ option: name ":" val
 // declarations
 ?declaration: (gate_decl | obs_decl | func_decl | out_decl)
 
-gate_decl: _GATE name params_list? wires ";"
-obs_decl: _OP name params_list? wires ";"
+gate_decl: _GATE name params_list? wires_or_enum ";"
+obs_decl: _OP name params_list? wires_or_enum ";"
 out_decl: _OUT name params_list? wires ";"
 func_decl: _FUNC name params_list? ";"
 
@@ -29,7 +29,9 @@ obs_group: obs "[" wire "]" ("@" obs "[" wire "]")*
 ?obs: name
 
 // wires and parameters
-wires : "[" (wire | range_) ("," (wire | range_))* "]"
+wires_or_enum: "[" wire_list "]" | "[" ENUM "]"
+wires: "[" wire_list "]"
+wire_list : (wire | range_) ("," (wire | range_))*
 ?wire : uint | name
 
 ?params: params_dict | params_list
@@ -77,6 +79,7 @@ _OP: "obs"
 _OUT: "out"
 INVERSE: "inv"
 CTRL: "ctrl"
+ENUM: "..."
 
 _END: "end"
 
