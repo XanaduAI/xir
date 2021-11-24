@@ -4,6 +4,7 @@ from decimal import Decimal
 from pathlib import Path
 
 import lark
+from lark import v_args
 
 from .decimal_complex import DecimalComplex
 from .program import Declaration, ObservableStmt, Program, Statement, ObservableFactor
@@ -17,7 +18,7 @@ def _read_lark_file() -> str:
         return file.read()
 
 
-parser = lark.Lark(grammar=_read_lark_file(), start="program", parser="lalr")
+parser = lark.Lark(grammar=_read_lark_file(), start="program", parser="lalr", debug=True)
 
 
 class Transformer(lark.Transformer):
@@ -199,23 +200,9 @@ class Transformer(lark.Transformer):
 
         self._program.add_gate(name, params, wires, stmts)
 
-    def obs_def(self, args):
-        """Observable definition. Starts with keyword 'obs'. Adds observable to program."""
-        name = args.pop(0)
-        wires = ()
-        params = []
-        stmts = []
-
-        for i, arg in enumerate(args):
-            if is_param(arg):
-                params = arg[1]
-            elif is_wire(arg):
-                wires = arg[1]
-            elif isinstance(arg, ObservableStmt):
-                stmts = args[i:]
-                break
-
-        self._program.add_observable(name, params, wires, stmts)
+    @v_args(inline=True)
+    def obs_def(self, name, wires, statements):
+        self._program.add_observable(name, [], wires, statements)
 
     def application_stmt(self, args):
         """Application statement. Can be either a gate statment or an output statement and is
@@ -253,37 +240,22 @@ class Transformer(lark.Transformer):
         }
         return Statement(name, params, wires, **stmt_options)
 
-    def obs_stmt(self, args):
+    @v_args(inline=True)
+    def obs_stmt(self, coeff, factors):
         """Observable statement. Defined inside an observable definition.
 
         Returns:
             ObservableStmt: object containing statement data
         """
-        pref = simplify_math(args[0])
-        factors = args[1]
-        return ObservableStmt(
-            pref, [ObservableFactor(*factor) for factor in factors], use_floats=self.use_floats
-        )
+        return ObservableStmt(simplify_math(coeff), [factors], use_floats=self.use_floats)
 
-    def obs_group(self, args):
-        """Group of observables used to define an observable statement.
+    @v_args(inline=True)
+    def obs_factor_params(self, name, params, wires):
+        return ObservableFactor(name, params[0], wires)
 
-        Returns:
-            list[tuple]: each observable with corresponding wires as tuples
-        """
-        obs_group_list = []
-        args_iterator = iter(args)
-        while True:
-            try:
-                obs = next(args_iterator)
-            except StopIteration:
-                break
-            arg = next(args_iterator)
-            if not is_param(arg):
-                obs_group_list.append((obs, [], arg[1]))
-            else:
-                obs_group_list.append((obs, arg[1], next(args_iterator)[1]))
-        return obs_group_list
+    @v_args(inline=True)
+    def obs_factor_no_params(self, name, wires):
+        return ObservableFactor(name, [], wires)
 
     ################
     # declarations
@@ -303,13 +275,20 @@ class Transformer(lark.Transformer):
     def obs_decl(self, args):
         """Observable declaration. Adds declaration to program."""
         if len(args) == 3:
-            name, params, wires = args[0], args[1][1], args[2].children
+            name, params, wires = args[0], args[1][1], args[2]
         else:
-            name, wires = args[0], args[1][1]
+            name, wires = args[0], args[1]
             params = []
 
         decl = Declaration(name, type_="obs", params=params, wires=wires)
         self._program.add_declaration(decl)
+
+    def wire_list(self, args):
+        return args
+
+    def ENUM(self, _):
+        return "ENUM"
+
 
     def func_decl(self, args):
         """Function declaration. Adds declaration to program."""

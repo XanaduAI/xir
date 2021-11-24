@@ -18,19 +18,24 @@ obs_decl: _OP name params_list? wires_or_enum ";"
 out_decl: _OUT name params_list? wires ";"
 func_decl: _FUNC name params_list? ";"
 
+
+
 // gates and application statements
 gate_def: _GATE name params_list? wires? ":" application_stmt+ _END ";"
 application_stmt: (INVERSE | (CTRL wires))* name params? "|" wires ";"
 
 // observables
-obs_def: _OP name params_list? wires? ":" obs_stmt+ _END ";"
-obs_stmt: expr "," obs_group ";"
-obs_group: obs params_list? wires ("@" obs params_list? wires)*
+obs_def: _OP name wires ":" obs_stmt+ _END ";"
+obs_stmt: expr "," _obs_group ";"
+_obs_group: _obs_factor ("@" _obs_factor)*
+_obs_factor: obs_factor_params | obs_factor_no_params
+obs_factor_params: obs params_list wires
+obs_factor_no_params: obs wires
 ?obs: name
 
 // wires and parameters
-wires_or_enum: "[" wire_list "]" | "[" ENUM "]"
-wires: "[" wire_list "]"
+?wires_or_enum: "[" wire_list "]" | "[" ENUM "]"
+?wires: "[" wire_list "]"
 wire_list : (wire | range_) ("," (wire | range_))*
 ?wire : uint | name
 
