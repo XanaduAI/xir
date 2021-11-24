@@ -245,11 +245,6 @@ class Transformer(lark.Transformer):
 
     @v_args(inline=True)
     def obs_stmt(self, coeff, factors):
-        """Observable statement. Defined inside an observable definition.
-
-        Returns:
-            ObservableStmt: object containing statement data
-        """
         return ObservableStmt(simplify_math(coeff), factors, use_floats=self.use_floats)
 
     def obs_group(self, factors):
