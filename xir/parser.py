@@ -4,6 +4,7 @@ from decimal import Decimal
 from pathlib import Path
 
 import lark
+from lark import v_args
 
 from .decimal_complex import DecimalComplex
 from .program import Declaration, ObservableStmt, Program, Statement
@@ -17,7 +18,7 @@ def _read_lark_file() -> str:
         return file.read()
 
 
-parser = lark.Lark(grammar=_read_lark_file(), start="program", parser="lalr")
+parser = lark.Lark(grammar=_read_lark_file(), start="program", parser="lalr", debug=True)
 
 
 class Transformer(lark.Transformer):
@@ -271,6 +272,10 @@ class Transformer(lark.Transformer):
         """
         return [(args[i], args[i + 1]) for i in range(0, len(args) - 1, 2)]
 
+    @v_args(inline=True)
+    def obs_factor(self, obs, wires):
+        print("hey")
+
     ################
     # declarations
     ################
@@ -289,13 +294,20 @@ class Transformer(lark.Transformer):
     def obs_decl(self, args):
         """Observable declaration. Adds declaration to program."""
         if len(args) == 3:
-            name, params, wires = args[0], args[1][1], args[2].children
+            name, params, wires = args[0], args[1][1], args[2]
         else:
-            name, wires = args[0], args[1][1]
+            name, wires = args[0], args[1]
             params = []
 
         decl = Declaration(name, type_="obs", params=params, wires=wires)
         self._program.add_declaration(decl)
+
+    def wire_list(self, args):
+        return list(args)
+
+    def ENUM(self, _):
+        return "ENUM"
+
 
     def func_decl(self, args):
         """Function declaration. Adds declaration to program."""
