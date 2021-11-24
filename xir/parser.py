@@ -10,6 +10,7 @@ from .decimal_complex import DecimalComplex
 from .program import Declaration, ObservableStmt, Program, Statement, ObservableFactor
 from .utils import simplify_math
 
+ENUM_WIRES = "ENUM_WIRES"
 
 def _read_lark_file() -> str:
     """Reads the contents of the XIR Lark grammar file."""
@@ -279,7 +280,7 @@ class Transformer(lark.Transformer):
         return args
 
     def ENUM(self, _):
-        return "ENUM"
+        return ENUM_WIRES
 
 
     def func_decl(self, args):
