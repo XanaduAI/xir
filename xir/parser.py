@@ -274,14 +274,9 @@ class Transformer(lark.Transformer):
         decl = Declaration(name, type_="gate", params=params, wires=wires)
         self._program.add_declaration(decl)
 
-    def obs_decl(self, args):
+    @v_args(inline=True)
+    def obs_decl(self, name, params, wires):
         """Observable declaration. Adds declaration to program."""
-        if len(args) == 3:
-            name, params, wires = args[0], args[1][1], args[2]
-        else:
-            name, wires = args[0], args[1]
-            params = []
-
         decl = Declaration(name, type_="obs", params=params, wires=wires)
         self._program.add_declaration(decl)
 

@@ -25,8 +25,8 @@ gate_def: _GATE name params_list? wires? ":" application_stmt+ _END ";"
 application_stmt: (INVERSE | (CTRL wires))* name params? "|" wires ";"
 
 // observables
-obs_def: _OP name [params_list] [wires] ":" obs_stmts _END ";"
-obs_stmts: obs_stmt+
+obs_def: _OP name [params_list] [wires] ":" obs_stmt_list _END ";"
+obs_stmt_list: obs_stmt+
 obs_stmt: expr "," obs_group ";"
 obs_group: obs_factor ("@" obs_factor)*
 obs_factor: obs [params] wires
