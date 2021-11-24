@@ -12,14 +12,11 @@ from .utils import simplify_math
 
 ENUM_WIRES = "ENUM_WIRES"
 
-def _read_lark_file() -> str:
+def read_lark_file() -> str:
     """Reads the contents of the XIR Lark grammar file."""
     path = Path(__file__).parent / "xir.lark"
     with path.open("r") as file:
         return file.read()
-
-
-parser = lark.Lark(grammar=_read_lark_file(), maybe_placeholders=True, start="program", parser="lalr", debug=True)
 
 
 class Transformer(lark.Transformer):
@@ -222,7 +219,7 @@ class Transformer(lark.Transformer):
         if is_param(args[0]):
             if isinstance(args[0][1], list):
                 params = list(map(simplify_math, args[0][1]))
-                wires = args[1][1]
+                wires = args[1]
             else:  # if dict
                 params = {str(k): simplify_math(v) for k, v in args[0][1].items()}
                 wires = args[1]
