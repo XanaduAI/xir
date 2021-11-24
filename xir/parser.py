@@ -240,7 +240,7 @@ class Transformer(lark.Transformer):
     def obs_def(self, name, param_list, wires, statements):
         self._program.add_observable(name, param_list, wires, statements)
 
-    def obs_stmts(self, stmts):
+    def obs_stmt_list(self, stmts):
         return stmts
 
     @v_args(inline=True)
