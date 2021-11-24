@@ -225,10 +225,10 @@ class Transformer(lark.Transformer):
                 wires = args[1][1]
             else:  # if dict
                 params = {str(k): simplify_math(v) for k, v in args[0][1].items()}
-                wires = args[1][1]
+                wires = args[1]
         else:
             params = []
-            wires = args[0][1]
+            wires = args[0]
 
         stmt_options = {
             "ctrl_wires": tuple(sorted(ctrl_wires, key=hash)),
