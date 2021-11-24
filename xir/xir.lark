@@ -13,10 +13,10 @@ option: name ":" val
 // declarations
 ?declaration: (gate_decl | obs_decl | func_decl | out_decl)
 
-gate_decl: _GATE name params_list? wires_or_enum ";"
-obs_decl: _OP name params_list? wires_or_enum ";"
-out_decl: _OUT name params_list? wires ";"
-func_decl: _FUNC name params_list? ";"
+gate_decl: _GATE name [params_list] wires_or_enum ";"
+obs_decl: _OP name [params_list] wires_or_enum ";"
+out_decl: _OUT name [params_list] wires ";"
+func_decl: _FUNC name [params_list] ";"
 
 
 

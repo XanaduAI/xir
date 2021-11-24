@@ -256,14 +256,9 @@ class Transformer(lark.Transformer):
     # declarations
     ################
 
-    def gate_decl(self, args):
+    @v_args(inline=True)
+    def gate_decl(self, name, params, wires):
         """Gate declaration. Adds declaration to program."""
-        if len(args) == 3:
-            name, params, wires = args[0], args[1][1], args[2]
-        else:
-            name, wires = args[0], args[1]
-            params = []
-
         decl = Declaration(name, type_="gate", params=params, wires=wires)
         self._program.add_declaration(decl)
 
@@ -279,26 +274,15 @@ class Transformer(lark.Transformer):
     def ENUM(self, _):
         return ENUM_WIRES
 
-
-    def func_decl(self, args):
+    @v_args(inline=True)
+    def func_decl(self, name, params):
         """Function declaration. Adds declaration to program."""
-        if len(args) == 2:
-            name, params = args[0], args[1][1]
-        else:
-            name = args[0]
-            params = []
-
         decl = Declaration(name, type_="func", params=params)
         self._program.add_declaration(decl)
 
-    def out_decl(self, args):
+    @v_args(inline=True)
+    def out_decl(self, name, params, wires):
         """Output declaration. Adds declaration to program."""
-        if len(args) == 3:
-            name, params, wires = args[0], args[1][1], args[2]
-        else:
-            name, wires = args[0], args[1]
-            params = []
-
         decl = Declaration(name, type_="out", params=params, wires=wires)
         self._program.add_declaration(decl)
 
