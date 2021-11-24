@@ -259,9 +259,9 @@ class Transformer(lark.Transformer):
     def gate_decl(self, args):
         """Gate declaration. Adds declaration to program."""
         if len(args) == 3:
-            name, params, wires = args[0], args[1][1], args[2][1]
+            name, params, wires = args[0], args[1][1], args[2]
         else:
-            name, wires = args[0], args[1][1]
+            name, wires = args[0], args[1]
             params = []
 
         decl = Declaration(name, type_="gate", params=params, wires=wires)
@@ -294,9 +294,9 @@ class Transformer(lark.Transformer):
     def out_decl(self, args):
         """Output declaration. Adds declaration to program."""
         if len(args) == 3:
-            name, params, wires = args[0], args[1][1], args[2][1]
+            name, params, wires = args[0], args[1][1], args[2]
         else:
-            name, wires = args[0], args[1][1]
+            name, wires = args[0], args[1]
             params = []
 
         decl = Declaration(name, type_="out", params=params, wires=wires)
