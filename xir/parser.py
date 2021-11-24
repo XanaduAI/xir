@@ -18,7 +18,7 @@ def _read_lark_file() -> str:
         return file.read()
 
 
-parser = lark.Lark(grammar=_read_lark_file(), start="program", parser="lalr", debug=True)
+parser = lark.Lark(grammar=_read_lark_file(), maybe_placeholders=True, start="program", parser="lalr", debug=True)
 
 
 class Transformer(lark.Transformer):
@@ -200,10 +200,6 @@ class Transformer(lark.Transformer):
 
         self._program.add_gate(name, params, wires, stmts)
 
-    @v_args(inline=True)
-    def obs_def(self, name, wires, statements):
-        self._program.add_observable(name, [], wires, statements)
-
     def application_stmt(self, args):
         """Application statement. Can be either a gate statment or an output statement and is
         defined either directly in the circuit or inside a gate definition.
@@ -241,21 +237,27 @@ class Transformer(lark.Transformer):
         return Statement(name, params, wires, **stmt_options)
 
     @v_args(inline=True)
+    def obs_def(self, name, param_list, wires, statements):
+        self._program.add_observable(name, param_list, wires, statements)
+
+    def obs_stmts(self, stmts):
+        return stmts
+
+    @v_args(inline=True)
     def obs_stmt(self, coeff, factors):
         """Observable statement. Defined inside an observable definition.
 
         Returns:
             ObservableStmt: object containing statement data
         """
-        return ObservableStmt(simplify_math(coeff), [factors], use_floats=self.use_floats)
+        return ObservableStmt(simplify_math(coeff), factors, use_floats=self.use_floats)
+
+    def obs_group(self, factors):
+        return factors
 
     @v_args(inline=True)
-    def obs_factor_params(self, name, params, wires):
-        return ObservableFactor(name, params[0], wires)
-
-    @v_args(inline=True)
-    def obs_factor_no_params(self, name, wires):
-        return ObservableFactor(name, [], wires)
+    def obs_factor(self, name, params, wires):
+        return ObservableFactor(name, params, wires)
 
     ################
     # declarations

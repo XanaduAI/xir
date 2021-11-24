@@ -140,8 +140,8 @@ class Statement:
 class ObservableFactor:
     def __init__(self, name: str, params: [], wires: [int]):
         self.name = name
-        self.params = params
-        self.wires = wires
+        self.params = [] if params is None else params
+        self.wires = [] if wires is None else wires
 
     def __str__(self):
         if len(self.params) == 0:
