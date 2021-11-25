@@ -9,11 +9,11 @@ from .validator import Validator
 __all__ = [
     "DecimalComplex",
     "Declaration",
+    "ObservableFactor",
     "ObservableStmt",
     "Program",
     "Statement",
     "Transformer",
-    "ObservableFactor",
 ]
 
 
