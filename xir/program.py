@@ -138,16 +138,24 @@ class Statement:
 
 
 class ObservableFactor:
-    def __init__(self, name: str, params: [], wires: [int]):
+    """Observable factor to be used in observable definitions.
+
+    Args:
+        name (str): the name of the factor
+        params ([Any]): the parameters of the factor
+        wires ([int]): the wires this factor acts on
+    """
+    def __init__(self, name: str, params: Params, wires: Sequence[Wire]) -> None:
         self.name = name
         self.params = list(params or [])
-        self.wires = tuple(wires or ())
+        self.wires = list(wires or [])
 
-    def __str__(self):
+    def __str__(self) -> str:
         if len(self.params) == 0:
             return f"{self.name}{self.wires}"
         else:
-            return f"{self.name}({', '.join([str(v) for v in self.params])}){self.wires}"
+            params = ', '.join([str(v) for v in self.params])
+            return f"{self.name}({params}){self.wires}"
 
 
 class ObservableStmt:
@@ -155,7 +163,8 @@ class ObservableStmt:
 
     Args:
         pref (Decimal, int, str): prefactor to the observable terms
-        factors (list): list of observables and the wire(s) they are applied to
+        factors (list[ObservableFactor]): list of observable factors
+        use_floats(bool): whether floats and complex types are returned instead of ``Decimal``
     """
 
     def __init__(
