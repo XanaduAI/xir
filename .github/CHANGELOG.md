@@ -2,7 +2,7 @@
 
 ### New features since last release
 
-* A `constants` block is added to support declaring script-level constants, which can then be used
+* A `constants` block is added to support declaring script level constants, which can then be used
   as parameters in statements.
   [(#7)](https://github.com/XanaduAI/xir/pull/7)
 
@@ -39,7 +39,7 @@
   [(#2)](https://github.com/XanaduAI/xir/pull/2)
 
 * `decimal.Decimal` and `DecimalComplex` objects in nested lists and dictionaries are correctly
-  converted to ``float`` and ``complex`` respectively when using extracted.
+  converted to ``float`` and ``complex`` respectively when extracted.
   [(#7)](https://github.com/XanaduAI/xir/pull/7)
 
 ### Documentation

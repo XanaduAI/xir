@@ -368,10 +368,10 @@ class Program:
 
     @property
     def options(self) -> Mapping[str, Any]:
-        """Returns the script-level options declared in the XIR program.
+        """Returns the script level options declared in the XIR program.
 
         Returns:
-            Mapping[str, Any]: declared script-level options
+            Mapping[str, Any]: declared script level options
         """
         if self.use_floats:
             options_with_floats = get_floats(self._options)
@@ -383,10 +383,10 @@ class Program:
 
     @property
     def constants(self) -> Mapping[str, Any]:
-        """Returns the script-level constants declared in the XIR program.
+        """Returns the script level constants declared in the XIR program.
 
         Returns:
-            Mapping[str, Any]: declared script-level constants
+            Mapping[str, Any]: declared script level constants
         """
         if self.use_floats:
             constants_with_floats = get_floats(self._constants)

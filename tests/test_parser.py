@@ -42,7 +42,7 @@ class TestParser:
         ],
     )
     def test_options(self, key, val, expected):
-        """Test script-level options."""
+        """Test script level options."""
         irprog = parse_script(f"options:\n    {key}: {val};\nend;", use_floats=True, eval_pi=True)
 
         assert key in irprog.options
@@ -57,7 +57,7 @@ class TestParser:
         ],
     )
     def test_options_lists(self, key, val):
-        """Test script-level options with lists."""
+        """Test script level options with lists."""
         val_str = "[" + ", ".join(str(v) for v in val) + "]"
         irprog = parse_script(f"options:\n    {key}: {val_str};\nend;")
 
@@ -77,7 +77,7 @@ class TestParser:
         ],
     )
     def test_constants(self, key, val, expected):
-        """Test script-level constants."""
+        """Test script level constants."""
         irprog = parse_script(f"constants:\n    {key}: {val};\nend;", use_floats=True, eval_pi=True)
 
         assert key in irprog.constants
@@ -92,7 +92,7 @@ class TestParser:
         ],
     )
     def test_constants_lists(self, key, val):
-        """Test script-level constants with lists."""
+        """Test script level constants with lists."""
         val_str = "[" + ", ".join(str(v) for v in val) + "]"
         irprog = parse_script(f"constants:\n    {key}: {val_str};\nend;")
 
