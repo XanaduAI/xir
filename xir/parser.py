@@ -73,6 +73,11 @@ class Transformer(lark.Transformer):
         for name, value in args:
             self._program.add_option(name, value)
 
+    def constants(self, args):
+        """Script level constants. Adds any constant to the program."""
+        for name, value in args:
+            self._program.add_constant(name, value)
+
     ###############
     # basic types
     ###############

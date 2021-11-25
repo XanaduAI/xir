@@ -1,13 +1,14 @@
 // XIR grammar
 program: include* circuit
-circuit: (script_options | declaration | gate_def | obs_def | application_stmt)*
+circuit: (script_options | constants | declaration | gate_def | obs_def | application_stmt)*
 
 // includes
 include: "use" (path | ANGLE_L path ANGLE_R) ";"
 path: /[-.:_a-zA-Z0-9\/]+/
 
-// script options
+// script options and constants
 script_options: _OPTIONS ":" (option ";")+ _END ";"
+constants: _CONSTANTS ":" (option ";")+ _END ";"
 option: name ":" val
 
 // declarations
@@ -71,6 +72,7 @@ range_: INT ".." INT
 PI: "pi"
 
 _OPTIONS: "options"
+_CONSTANTS: "constants"
 _GATE: "gate"
 _FUNC: "func"
 _OP: "obs"
