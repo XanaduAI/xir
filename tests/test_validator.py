@@ -256,6 +256,15 @@ class TestValidatorIntegration:
                     )
                 ],
             ),
+            (
+                "constants: a: 1.23; end; gate MyGate(a): BSgate(a, 0.0) | [0, 1]; end;",
+                [
+                    (
+                        "Definition 'MyGate' is invalid. Cannot use declared constant(s) "
+                        "{'a'} as parameter(s)."
+                    )
+                ],
+            ),
         ],
     )
     def test_check_gate_definitions(self, stmt, matches):

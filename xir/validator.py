@@ -363,6 +363,14 @@ class Validator:
             msg = f"Definition '{name}' is invalid. Wire and parameter names must differ."
             self._validation_messages.append(msg)
 
+        constants_declared = {p for p in declared_params if p in self._program.constants}
+        if constants_declared:
+            msg = (
+                f"Definition '{name}' is invalid. Cannot use declared constant(s) "
+                f"{constants_declared} as parameter(s)."
+            )
+            self._validation_messages.append(msg)
+
     def _check_observable_statements(
         self,
         statements: Sequence[ObservableStmt],
