@@ -29,7 +29,7 @@ is expanded on in detail following some initial examples:
     gate CNOT [control, target];
     obs ScaledZ(scalar) [wire];
     func arctan(x);
-    out amplitude;
+    out amplitude(state) [0..2];
 
 
 4. **Definitions.** Definitions of gates and observables.
