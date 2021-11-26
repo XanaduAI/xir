@@ -180,6 +180,7 @@ class Transformer(lark.Transformer):
         params = []
         stmts = []
 
+        max_wire = 0
         has_declared_wires = False
         for i, arg in enumerate(args):
             if is_param(arg):
@@ -191,15 +192,22 @@ class Transformer(lark.Transformer):
                 if has_declared_wires:
                     stmts = args[i:]
                     break
-
                 stmts.append(arg)
-                for w in arg.wires:
-                    wires += (w,) if w not in wires else ()
+
+                int_wires = [w for w in arg.wires if isinstance(w, int)]
+                if int_wires and max(int_wires) > max_wire:
+                    max_wire = max(int_wires)
+
+            if not has_declared_wires:
+                wires = tuple(range(max_wire + 1))
+            else:
+                # remove duplicate wires while maintaining order
+                wires = tuple(dict.fromkeys(wires))
 
         self._program.add_gate(name, params, wires, stmts)
 
     def application_stmt(self, args):
-        """Application statement. Can be either a gate statment or an output statement and is
+        """Application statement. Can be either a gate statement or an output statement and is
         defined either directly in the circuit or inside a gate definition.
 
         Returns:

@@ -172,3 +172,106 @@ class TestParser:
         """
         with pytest.raises(UnexpectedToken, match=r"Unexpected token"):
             parse_script(f"use {include};")
+
+    @pytest.mark.parametrize(
+        "stmt, expected_wires",
+        [
+            (
+                "gate MultiRot(x, y, z): RX(x) | [0]; RY(y) | [0]; RZ(z) | [0]; end;",
+                (0,),
+            ),
+            (
+                "gate MultiRot(x, y, z): RX(x) | [0]; RY(y) | [1]; RZ(z) | [2]; end;",
+                (0, 1, 2),
+            ),
+            # Reverse order of the above.
+            (
+                "gate MultiRot(x, y, z): RX(x) | [2]; RY(y) | [1]; RZ(z) | [0]; end;",
+                (0, 1, 2),
+            ),
+            (
+                "gate MultiRot(x, y, z): RX(x) | [0]; RY(y) | [1]; RZ(z) | [1]; end;",
+                (0, 1),
+            ),
+            (
+                "gate MultiRot(x, y, z): RX(x) | [0]; RY(y) | [0]; RZ(z) | [3]; end;",
+                (0, 1, 2, 3),
+            ),
+            (
+                "gate MultiRot(x, y, z): RX(x) | [4]; RY(y) | [4]; RZ(z) | [4]; end;",
+                (0, 1, 2, 3, 4),
+            ),
+            (
+                "gate MultiRot(x, y, z)[4]: RX(x) | [4]; RY(y) | [4]; RZ(z) | [4]; end;",
+                (4,),
+            ),
+            (
+                "gate MultiRot(x, y, z)[b, a]: RX(x) | [a]; RY(y) | [b]; RZ(z) | [a]; end;",
+                ("b", "a"),
+            ),
+            (
+                "gate MultiRot(x, y, z)[0, 1, 2, 3]: RX(x) | [0]; RY(y) | [2]; RZ(z) | [0]; end;",
+                (0, 1, 2, 3),
+            ),
+        ],
+    )
+    def test_gate_definition_wires(self, stmt, expected_wires):
+        """Tests that wires are correctly declared when defining a gate."""
+        script = f"gate RX(x)[0];gate RY(x)[0];gate RZ(x)[0]; {stmt}"
+        program = parse_script(script)
+
+        assert program.declarations["gate"][0].name == "RX"
+        assert program.declarations["gate"][1].name == "RY"
+        assert program.declarations["gate"][2].name == "RZ"
+
+        assert program.declarations["gate"][3].name == "MultiRot"
+        assert program.declarations["gate"][3].wires == expected_wires
+
+    @pytest.mark.parametrize(
+        "stmt, expected_wires",
+        [
+            (
+                "obs Orange(x, y, z): 1.2, X[0]; end;",
+                (0,),
+            ),
+            (
+                "obs Orange(x, y, z): 4.1, X[0] @ Y[1]; 1, Z[2]; end;",
+                (0, 1, 2),
+            ),
+            (
+                "obs Orange(x, y, z): 1, X[0] @ Y[1]; 1, Z[1]; end;",
+                (0, 1),
+            ),
+            (
+                "obs Orange(x, y, z): 1, X[3] @ Y[1]; 1.4, Z[0] @ Y[2]; end;",
+                (0, 1, 2, 3),
+            ),
+            (
+                "obs Orange(x, y, z): 1, X[4]; 1, Z[4]; end;",
+                (0, 1, 2, 3, 4),
+            ),
+            (
+                "obs Orange(x, y, z)[4]: 2.2, X[4]; 1, Z[4]; end;",
+                (4,),
+            ),
+            (
+                "obs Orange(x, y, z)[b, a]: 1, X[a] @ Y[b]; 1, Z[b]; end;",
+                ("b", "a"),
+            ),
+            (
+                "obs Orange(x, y, z)[0, 1, 2, 3]: 1, X[0] @ Y[2]; 0.42, Z[0]; end;",
+                (0, 1, 2, 3),
+            ),
+        ],
+    )
+    def test_observable_definition_wires(self, stmt, expected_wires):
+        """Tests that wires are correctly declared when defining an observable."""
+        script = f"obs X[0];obs Y[0];obs Z[0]; {stmt}"
+        program = parse_script(script)
+
+        assert program.declarations["obs"][0].name == "X"
+        assert program.declarations["obs"][1].name == "Y"
+        assert program.declarations["obs"][2].name == "Z"
+
+        assert program.declarations["obs"][3].name == "Orange"
+        assert program.declarations["obs"][3].wires == expected_wires
