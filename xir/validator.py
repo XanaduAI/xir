@@ -390,7 +390,8 @@ class Validator:
                 self._validation_messages.append(msg)
 
             # check if invalid observables are applied
-            words, wires = zip(*stmt.factors)
+            words = [factor.name for factor in stmt.factors]
+            wires = tuple(wire for factor in stmt.factors for wire in factor.wires)
             invalid_words = set(words) - {x.name for x in self._program.declarations["obs"]}
             if invalid_words and not (not self._ignore_includes and self.has_includes):
                 msg = (

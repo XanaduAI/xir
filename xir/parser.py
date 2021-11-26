@@ -267,12 +267,14 @@ class Transformer(lark.Transformer):
     @v_args(inline=True)
     def gate_decl(self, name, params, wires):
         """Gate declaration. Adds declaration to program."""
+        params = tuple(params[1]) if params is not None else tuple()
         decl = Declaration(name, type_="gate", params=params, wires=wires)
         self._program.add_declaration(decl)
 
     @v_args(inline=True)
     def obs_decl(self, name, params, wires):
         """Observable declaration. Adds declaration to program."""
+        params = tuple(params[1]) if params is not None else tuple()
         decl = Declaration(name, type_="obs", params=params, wires=wires)
         self._program.add_declaration(decl)
 
@@ -285,12 +287,14 @@ class Transformer(lark.Transformer):
     @v_args(inline=True)
     def func_decl(self, name, params):
         """Function declaration. Adds declaration to program."""
+        params = tuple(params[1]) if params is not None else tuple()
         decl = Declaration(name, type_="func", params=params)
         self._program.add_declaration(decl)
 
     @v_args(inline=True)
     def out_decl(self, name, params, wires):
         """Output declaration. Adds declaration to program."""
+        params = tuple(params[1]) if params is not None else tuple()
         decl = Declaration(name, type_="out", params=params, wires=wires)
         self._program.add_declaration(decl)
 

@@ -148,14 +148,15 @@ class ObservableFactor:
     def __init__(self, name: str, params: Params, wires: Sequence[Wire]) -> None:
         self.name = name
         self.params = list(params or [])
-        self.wires = list(wires or [])
+        self.wires = tuple(wires or [])
 
     def __str__(self) -> str:
         if len(self.params) == 0:
             return f"{self.name}{self.wires}"
         else:
             params = ', '.join([str(v) for v in self.params])
-            return f"{self.name}({params}){self.wires}"
+            wires = ', '.join([str(v) for v in self.wires])
+            return f"{self.name}({params})[{wires}]"
 
 
 class ObservableStmt:
@@ -205,7 +206,7 @@ class ObservableStmt:
     @property
     def wires(self) -> Sequence[Wire]:
         """Returns the wires this observable statement is applied to."""
-        return tuple(wires for _, wires in self.factors)
+        return tuple(wire for factor in self.factors for wire in factor.wires)
 
 
 class Declaration:
