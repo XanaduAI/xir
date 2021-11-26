@@ -243,8 +243,9 @@ class Transformer(lark.Transformer):
         return Statement(name, params, wires, **stmt_options)
 
     @v_args(inline=True)
-    def obs_def(self, name, param_list, wires, statements):
-        self._program.add_observable(name, param_list, wires, statements)
+    def obs_def(self, name, params, wires, statements):
+        params = tuple(params[1]) if params is not None else tuple()
+        self._program.add_observable(name, params, wires, statements)
 
     def obs_stmt_list(self, stmts):
         return stmts

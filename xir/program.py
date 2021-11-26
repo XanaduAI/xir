@@ -151,11 +151,11 @@ class ObservableFactor:
         self.wires = tuple(wires or [])
 
     def __str__(self) -> str:
+        wires = ', '.join([str(v) for v in self.wires])
         if len(self.params) == 0:
-            return f"{self.name}{self.wires}"
+            return f"{self.name}[{self.wires}]"
         else:
             params = ', '.join([str(v) for v in self.params])
-            wires = ', '.join([str(v) for v in self.wires])
             return f"{self.name}({params})[{wires}]"
 
 
