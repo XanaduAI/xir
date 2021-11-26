@@ -25,7 +25,7 @@ def parse_script(script: str, debug=True, **kwargs) -> Program:
             maybe_placeholders=True,
             start="program",
             parser="lalr",
-            debug=True
+            debug=True,
         )
         tree = parser.parse(script)
         return Transformer(**kwargs).transform(tree)
@@ -35,6 +35,6 @@ def parse_script(script: str, debug=True, **kwargs) -> Program:
             maybe_placeholders=True,
             start="program",
             parser="lalr",
-            transformer=Transformer(**kwargs)
+            transformer=Transformer(**kwargs),
         )
         return parser.parse(script)
