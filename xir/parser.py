@@ -221,7 +221,7 @@ class Transformer(lark.Transformer):
             if a == "inv":
                 inverse = not inverse
             elif a == "ctrl":
-                ctrl_wires.update(args.pop(0)[1])
+                ctrl_wires.update(args.pop(0))
 
         name = args.pop(0)
         if is_param(args[0]):
