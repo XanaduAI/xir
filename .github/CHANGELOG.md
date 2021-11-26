@@ -19,6 +19,9 @@
 
 ### Documentation
 
+* The `out` declaration in the Grammar overview is now valid XIR syntax.
+  [(#8)](https://github.com/XanaduAI/xir/pull/2)
+
 ### Contributors
 
 This release contains contributions from (in alphabetical order):
