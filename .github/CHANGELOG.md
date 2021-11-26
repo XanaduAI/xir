@@ -28,7 +28,7 @@
   [(#2)](https://github.com/XanaduAI/xir/pull/2)
 
 * `xir.Validator` now checks that parameters used in definitions are not also declared constants.
-  [(#7)](https://github.com/XanaduAI/xir/pull/2)
+  [(#7)](https://github.com/XanaduAI/xir/pull/7)
 
 ### Bug Fixes
 
