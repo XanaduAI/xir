@@ -8,7 +8,7 @@ An XIR script consists of five parts, all of which are optional. Each of these
 is expanded on in detail following some initial examples:
 
 1. **Includes.** Included XIR scripts which have been prepared to contain useful
-declarations or definitions.
+   declarations or definitions.
 
 .. code-block:: text
 
