@@ -145,6 +145,7 @@ class ObservableFactor:
         params ([Any]): the parameters of the factor
         wires ([int]): the wires this factor acts on
     """
+
     def __init__(self, name: str, params: Params, wires: Sequence[Wire]) -> None:
         self.name = name
         self.params = list(params or [])
