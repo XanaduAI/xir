@@ -475,6 +475,26 @@ class TestProgram:
 
         assert program.options == {"precision": "double"}
 
+    def test_add_constant(self, program):
+        """Tests that constants can be added to an XIR program."""
+        program.add_constant("p0", [1, 2, 3])
+        assert program.constants == {"p0": [1, 2, 3]}
+
+        program.add_constant("golden_ratio", 1.618)
+        assert program.constants == {"p0": [1, 2, 3], "golden_ratio": 1.618}
+
+    def test_add_constant_with_same_key(self, program):
+        """Tests that a warning is issued when two constants with the same key
+        are added to an XIR program.
+        """
+        program.add_constant("p1", [4, 2])
+        assert program.constants == {"p1": [4, 2]}
+
+        with pytest.warns(Warning, match=r"Constant 'p1' already set"):
+            program.add_constant("p1", [3, 14])
+
+        assert program.constants == {"p1": [3, 14]}
+
     def test_add_statement(self, program):
         """Tests that statements can be added to an XIR program."""
         program.add_statement(xir.Statement("X", {}, [0]))

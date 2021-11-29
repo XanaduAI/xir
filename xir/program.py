@@ -550,7 +550,7 @@ class Program:
             name (str): name of the constant
             value (Any): value of the constant
         """
-        if name in self._options:
+        if name in self._constants:
             warnings.warn(f"Constant '{name}' already set. Replacing old value with new value.")
 
         self._constants[name] = value
