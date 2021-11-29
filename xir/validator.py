@@ -170,13 +170,13 @@ class Validator:
         """Checks that statements are valid.
 
         Checks that all statements have a declaration and that they are correctly applied. If no
-        statements are passed, the script level statements in the program will be used. The
+        statements are passed, the script-level statements in the program will be used. The
         statements will be marked as invalid if:
 
             * A gate application statement specifies the wrong number of wires.
             * A gate application statement specifies the wrong number of parameters.
             * A gate application statement specifies the wrong parameter names.
-            * A gate application statement at the script level is applied to named wires.
+            * A gate application statement at the script-level is applied to named wires.
 
         Checks that modifiers such as ``ctrl`` and ``inv`` are correctly applied.
         The modifiers will be marked as invalid if:
@@ -246,11 +246,11 @@ class Validator:
         Checks the remaining conditions documented (but not implemented) by
         :func:`Validator._check_statements()`.
         """
-        # check that only integer wire labels are used at a script level
+        # check that only integer wire labels are used at a script-level
         if declared_params is None and any(isinstance(wire, str) for wire in stmt.wires):
             msg = (
                 f"Statement '{stmt}' is applied to named wires. Only integer wire labels are "
-                "allowed at a script level."
+                "allowed at a script-level."
             )
             self._validation_messages.append(msg)
 

@@ -331,7 +331,7 @@ Keywords
 * ``gate``: Gate declaration or definition.
 * ``inv``: Inverse modifier for statements.
 * ``obs``: Observable declaration or definition.
-* ``options``: Start of script level options section.
+* ``options``: Start of script-level options section.
 * ``out``: Declaration of measurements and post-processing statistics.
 * ``pi``: Mathematical constant pi (:math:`\pi`).
 * ``true``: Boolean true.
