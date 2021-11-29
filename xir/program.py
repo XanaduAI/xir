@@ -155,7 +155,7 @@ class ObservableFactor:
 
     def __str__(self) -> str:
         wires = ", ".join(map(str, self.wires))
-        if self.params:
+        if not self.params:
             return f"{self.name}[{wires}]"
         params = ", ".join(map(str, self.params))
         return f"{self.name}({params})[{wires}]"
