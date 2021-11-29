@@ -21,7 +21,7 @@ func_decl: _FUNC name [params_list] ";"
 
 
 // gates and application statements
-gate_def: _GATE name params_list? wires? ":" application_stmt+ _END ";"
+gate_def: _GATE name [params_list] [wires] ":" application_stmt+ _END ";"
 application_stmt: (INVERSE | (CTRL wires))* name params? "|" wires ";"
 
 // observables

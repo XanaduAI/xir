@@ -173,38 +173,29 @@ class Transformer(lark.Transformer):
     # definitions and statements
     ##############################
 
-    def gate_def(self, args):
+    @v_args(inline=True)
+    def gate_def(self, name, params_list, wires, *stmts):
         """Gate definition. Starts with keyword 'gate'. Adds gate to program."""
-        name = args.pop(0)
-        wires = ()
-        params = []
-        stmts = []
 
         max_wire = 0
         has_declared_wires = False
-        for i, arg in enumerate(args):
-            if is_param(arg):
-                params = arg[1]
-            elif is_wire(arg):
-                has_declared_wires = True
-                wires = arg[1]
-            elif isinstance(arg, Statement):
-                if has_declared_wires:
-                    stmts = args[i:]
-                    break
-                stmts.append(arg)
+        if wires is not None and len(wires) > 0:
+            has_declared_wires = True
 
-                int_wires = [w for w in arg.wires if isinstance(w, int)]
+
+        if not has_declared_wires:
+            max_wire = 0
+            for stmt in stmts:
+                int_wires = [w for w in stmt.wires if isinstance(w, int)]
                 if int_wires and max(int_wires) > max_wire:
                     max_wire = max(int_wires)
 
-            if not has_declared_wires:
-                wires = tuple(range(max_wire + 1))
-            else:
-                # remove duplicate wires while maintaining order
-                wires = tuple(dict.fromkeys(wires))
+            wires = tuple(range(max_wire + 1))
+        else:
+            # remove duplicate wires while maintaining order
+            wires = tuple(dict.fromkeys(wires))
 
-        self._program.add_gate(name, params, wires, stmts)
+        self._program.add_gate(name, [] if params_list is None else params_list[1], wires, stmts)
 
     def application_stmt(self, args):
         """Application statement. Can be either a gate statement or an output statement and is
