@@ -72,6 +72,8 @@ class TestParser:
             ("a_number", "3 + 2.1", 5.1),
             ("a_number_with_pi", "pi / 2", math.pi / 2),
             ("a_string", "hello", "hello"),
+            ("a_string", "PI", "PI"),
+            ("a_string", "obs", "obs"),
             ("True", "False", "False"),
             ("true", "false", False),
         ],

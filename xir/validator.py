@@ -363,7 +363,7 @@ class Validator:
             msg = f"Definition '{name}' is invalid. Wire and parameter names must differ."
             self._validation_messages.append(msg)
 
-        constants_declared = set(declared_params) - set(self._program.constants)
+        constants_declared = set(declared_params).intersection(self._program.constants)
         if constants_declared:
             msg = (
                 f"Definition '{name}' is invalid. Cannot use declared constant(s) "
