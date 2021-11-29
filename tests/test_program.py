@@ -5,7 +5,6 @@ from decimal import Decimal
 from typing import Any, Dict, Iterable, List, MutableSet, Sequence
 
 import pytest
-from xir import ObservableFactor
 
 import xir
 
@@ -128,7 +127,7 @@ class TestSerialize:
     def test_observable_stmt(self, program, pref, wires):
         """Tests serializing an XIR program with observable statements."""
         xyz = "XYZ"
-        terms = [ObservableFactor(xyz[i], None, w) for i, w in enumerate(wires)]
+        terms = [xir.ObservableFactor(xyz[i], None, w) for i, w in enumerate(wires)]
         terms_str = " @ ".join(str(t) for t in terms)
         wires_str = ", ".join(wires)
 
@@ -202,7 +201,7 @@ class TestSerialize:
         """Tests serializing an XIR program with observables that have both parameters and wires."""
         stmts = [
             xir.ObservableStmt(
-                42, [ObservableFactor("X", None, [0]), ObservableFactor("Y", None, [1])]
+                42, [xir.ObservableFactor("X", None, [0]), xir.ObservableFactor("Y", None, [1])]
             )
         ]
         program.add_observable(name, params, wires, stmts)
@@ -219,7 +218,7 @@ class TestSerialize:
         """Tests serializing an XIR program with observables that have no parameters."""
         stmts = [
             xir.ObservableStmt(
-                42, [ObservableFactor("X", None, [0]), ObservableFactor("Y", None, [1])]
+                42, [xir.ObservableFactor("X", None, [0]), xir.ObservableFactor("Y", None, [1])]
             )
         ]
         program.add_observable(name, [], wires, stmts)
@@ -235,7 +234,7 @@ class TestSerialize:
         """Tests serializing an XIR program with observables that have no declared wires."""
         stmts = [
             xir.ObservableStmt(
-                42, [ObservableFactor("X", None, [0]), ObservableFactor("Y", None, [1])]
+                42, [xir.ObservableFactor("X", None, [0]), xir.ObservableFactor("Y", None, [1])]
             )
         ]
         program.add_observable(name, params, (), stmts)
@@ -250,7 +249,7 @@ class TestSerialize:
         """Tests serializing an XIR program with observables that have no parameters or wires."""
         stmts = [
             xir.ObservableStmt(
-                42, [ObservableFactor("X", None, [0]), ObservableFactor("Y", None, [1])]
+                42, [xir.ObservableFactor("X", None, [0]), xir.ObservableFactor("Y", None, [1])]
             )
         ]
         program.add_observable(name, [], (), stmts)
