@@ -7,7 +7,14 @@ import lark
 from lark import v_args
 
 from .decimal_complex import DecimalComplex
-from .program import Declaration, ObservableStmt, Program, Statement, ObservableFactor, ARBITRARY_NUM_WIRES
+from .program import (
+    Declaration,
+    ObservableStmt,
+    Program,
+    Statement,
+    ObservableFactor,
+    ARBITRARY_NUM_WIRES,
+)
 from .utils import simplify_math
 
 

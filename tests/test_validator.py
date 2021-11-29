@@ -98,10 +98,10 @@ class TestValidatorIntegration:
                 ],
             ),
             (
-                    "gate Sgate(4.2)[...];",
-                    [
-                        "Declaration 'gate Sgate(4.2)[...]' has parameters which are not strings.",
-                    ],
+                "gate Sgate(4.2)[...];",
+                [
+                    "Declaration 'gate Sgate(4.2)[...]' has parameters which are not strings.",
+                ],
             ),
         ],
     )
