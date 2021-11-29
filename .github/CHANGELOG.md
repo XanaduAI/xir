@@ -2,7 +2,7 @@
 
 ### New features since last release
 
-* A `constants` block is added to support declaring script level constants, which can then be used
+* A `constants` block has been added to support declaring script-level constants which can be used
   as parameters in statements.
   [(#7)](https://github.com/XanaduAI/xir/pull/7)
 
@@ -17,7 +17,6 @@
  BSgate(p0, 0.0) | [1, 2];
  Rgate(p1) | [2];
  MeasureHomodyne(phi: p0) | [0];
- """
  ```
 
 ### Improvements
@@ -27,7 +26,7 @@
   declared wires will be 0, 1, 2, 3, and 4.
   [(#2)](https://github.com/XanaduAI/xir/pull/2)
 
-* `xir.Validator` now checks that parameters used in definitions are not also declared constants.
+* `xir.Validator` now also checks that parameters used in definitions are not declared constants.
   [(#7)](https://github.com/XanaduAI/xir/pull/7)
 
 ### Bug Fixes
@@ -39,7 +38,7 @@
   [(#2)](https://github.com/XanaduAI/xir/pull/2)
 
 * `decimal.Decimal` and `DecimalComplex` objects in nested lists and dictionaries are correctly
-  converted to ``float`` and ``complex`` respectively when extracted.
+  converted to `float` and `complex` respectively when extracted.
   [(#7)](https://github.com/XanaduAI/xir/pull/7)
 
 ### Documentation

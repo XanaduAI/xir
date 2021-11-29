@@ -78,10 +78,9 @@ class TestParser:
     )
     def test_constants(self, key, val, expected):
         """Test script level constants."""
-        irprog = parse_script(f"constants:\n    {key}: {val};\nend;", use_floats=True, eval_pi=True)
-
-        assert key in irprog.constants
-        assert irprog.constants[key] == expected
+        program = parse_script(f"constants:\n    {key}: {val};\nend;", use_floats=True, eval_pi=True)
+        assert key in program.constants
+        assert program.constants[key] == expected
 
     @pytest.mark.parametrize(
         "key, val",
@@ -93,11 +92,10 @@ class TestParser:
     )
     def test_constants_lists(self, key, val):
         """Test script level constants with lists."""
-        val_str = "[" + ", ".join(str(v) for v in val) + "]"
-        irprog = parse_script(f"constants:\n    {key}: {val_str};\nend;")
-
-        assert key in irprog.constants
-        assert irprog.constants[key] == val
+        val_str = "[" + ", ".join(map(str, val)) + "]"
+        program = parse_script(f"constants:\n    {key}: {val_str};\nend;")
+        assert key in program.constants
+        assert program.constants[key] == val
 
     @pytest.mark.parametrize(
         "script, inverse",
