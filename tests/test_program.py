@@ -5,6 +5,7 @@ from decimal import Decimal
 from typing import Any, Dict, Iterable, List, MutableSet, Sequence
 
 import pytest
+from xir import ObservableFactor
 
 import xir
 
@@ -127,8 +128,8 @@ class TestSerialize:
     def test_observable_stmt(self, program, pref, wires):
         """Tests serializing an XIR program with observable statements."""
         xyz = "XYZ"
-        terms = [(xyz[i], w) for i, w in enumerate(wires)]
-        terms_str = " @ ".join(f"{t[0]}[{t[1]}]" for t in terms)
+        terms = [ObservableFactor(xyz[i], None, w) for i, w in enumerate(wires)]
+        terms_str = " @ ".join(str(t) for t in terms)
         wires_str = ", ".join(wires)
 
         program.add_observable("H", ["a", "b"], wires, [xir.ObservableStmt(pref, terms)])
@@ -199,7 +200,7 @@ class TestSerialize:
     @pytest.mark.parametrize("wires", [("w0", "w1"), ("w0",), ("wire0", "anotherWire", "FortyTwo")])
     def test_observables_params_and_wires(self, program, name, params, wires):
         """Tests serializing an XIR program with observables that have both parameters and wires."""
-        stmts = [xir.ObservableStmt(42, [("X", 0), ("Y", 1)])]
+        stmts = [xir.ObservableStmt(42, [ObservableFactor("X", None, [0]), ObservableFactor("Y", None, [1])])]
         program.add_observable(name, params, wires, stmts)
 
         res = program.serialize()
@@ -212,7 +213,7 @@ class TestSerialize:
     @pytest.mark.parametrize("wires", [("w0", "w1"), ("w0",), ("wire0", "anotherWire", "FortyTwo")])
     def test_observables_no_params(self, program, name, wires):
         """Tests serializing an XIR program with observables that have no parameters."""
-        stmts = [xir.ObservableStmt(42, [("X", 0), ("Y", 1)])]
+        stmts = [xir.ObservableStmt(42, [ObservableFactor("X", None, [0]), ObservableFactor("Y", None, [1])])]
         program.add_observable(name, [], wires, stmts)
 
         res = program.serialize()
@@ -224,7 +225,7 @@ class TestSerialize:
     @pytest.mark.parametrize("params", [["a", "b"]])
     def test_observables_no_wires(self, program, name, params):
         """Tests serializing an XIR program with observables that have no declared wires."""
-        stmts = [xir.ObservableStmt(42, [("X", 0), ("Y", 1)])]
+        stmts = [xir.ObservableStmt(42, [ObservableFactor("X", None, [0]), ObservableFactor("Y", None, [1])])]
         program.add_observable(name, params, (), stmts)
 
         res = program.serialize()
@@ -235,7 +236,7 @@ class TestSerialize:
     @pytest.mark.parametrize("name", ["my_op", "op2"])
     def test_observables_no_params_and_no_wires(self, program, name):
         """Tests serializing an XIR program with observables that have no parameters or wires."""
-        stmts = [xir.ObservableStmt(42, [("X", 0), ("Y", 1)])]
+        stmts = [xir.ObservableStmt(42, [ObservableFactor("X", None, [0]), ObservableFactor("Y", None, [1])])]
         program.add_observable(name, [], (), stmts)
 
         res = program.serialize()
