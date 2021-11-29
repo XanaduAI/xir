@@ -7,10 +7,8 @@ import lark
 from lark import v_args
 
 from .decimal_complex import DecimalComplex
-from .program import Declaration, ObservableStmt, Program, Statement, ObservableFactor
+from .program import Declaration, ObservableStmt, Program, Statement, ObservableFactor, ARBITRARY_NUM_WIRES
 from .utils import simplify_math
-
-ENUM_WIRES = "ENUM_WIRES"
 
 
 def read_lark_file() -> str:
@@ -178,7 +176,7 @@ class Transformer(lark.Transformer):
     def gate_def(self, name, params_list, wires, *stmts):
         """Gate definition. Starts with keyword 'gate'. Adds gate to program."""
 
-        if wires is None:
+        if not wires:
             max_wire = 0
             for stmt in stmts:
                 int_wires = [w for w in stmt.wires if isinstance(w, int)]
@@ -190,7 +188,8 @@ class Transformer(lark.Transformer):
             # remove duplicate wires while maintaining order
             wires = tuple(dict.fromkeys(wires))
 
-        self._program.add_gate(name, [] if params_list is None else params_list[1], wires, stmts)
+        params = params_list[1] if params_list else []
+        self._program.add_gate(name, params, wires, stmts)
 
     def application_stmt(self, args):
         """Application statement. Can be either a gate statement or an output statement and is
@@ -244,15 +243,15 @@ class Transformer(lark.Transformer):
             # remove duplicate wires while maintaining order
             wires = tuple(dict.fromkeys(wires))
 
-        params = tuple(params[1]) if params is not None else tuple()
+        params = params[1] if params else []
         self._program.add_observable(name, params, wires, statements)
 
     def obs_stmt_list(self, stmts):
         return stmts
 
     @v_args(inline=True)
-    def obs_stmt(self, coeff, factors):
-        return ObservableStmt(simplify_math(coeff), factors, use_floats=self.use_floats)
+    def obs_stmt(self, pref, factors):
+        return ObservableStmt(simplify_math(pref), factors, use_floats=self.use_floats)
 
     def obs_group(self, factors):
         return factors
@@ -268,34 +267,34 @@ class Transformer(lark.Transformer):
     @v_args(inline=True)
     def gate_decl(self, name, params, wires):
         """Gate declaration. Adds declaration to program."""
-        params = tuple(params[1]) if params is not None else tuple()
+        params = params[1] if params else []
         decl = Declaration(name, type_="gate", params=params, wires=wires)
         self._program.add_declaration(decl)
 
     @v_args(inline=True)
     def obs_decl(self, name, params, wires):
         """Observable declaration. Adds declaration to program."""
-        params = tuple(params[1]) if params is not None else tuple()
+        params = params[1] if params else []
         decl = Declaration(name, type_="obs", params=params, wires=wires)
         self._program.add_declaration(decl)
 
     def wire_list(self, args):
         return args
 
-    def ENUM(self, _):
-        return ENUM_WIRES
+    def ARBITRARY_NUM_WIRES(self, _):
+        return ARBITRARY_NUM_WIRES
 
     @v_args(inline=True)
     def func_decl(self, name, params):
         """Function declaration. Adds declaration to program."""
-        params = tuple(params[1]) if params is not None else tuple()
+        params = params[1] if params else []
         decl = Declaration(name, type_="func", params=params)
         self._program.add_declaration(decl)
 
     @v_args(inline=True)
     def out_decl(self, name, params, wires):
         """Output declaration. Adds declaration to program."""
-        params = tuple(params[1]) if params is not None else tuple()
+        params = params[1] if params else []
         decl = Declaration(name, type_="out", params=params, wires=wires)
         self._program.add_declaration(decl)
 

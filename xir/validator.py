@@ -5,6 +5,8 @@ from decimal import Decimal
 from itertools import chain
 from typing import MutableSet, Optional, Sequence, Union
 
+from xir.parser import ARBITRARY_NUM_WIRES
+
 from xir.decimal_complex import DecimalComplex
 from xir.program import Declaration, ObservableStmt, Param, Program, Statement, Wire
 
@@ -150,7 +152,7 @@ class Validator:
             * A declaration has parameters which are not strings.
         """
         for decl in (d for l in self._program.declarations.values() for d in l):
-            if len(set(decl.wires)) != len(decl.wires):
+            if decl.wires != ARBITRARY_NUM_WIRES and len(set(decl.wires)) != len(decl.wires):
                 msg = f"Declaration '{decl}' has duplicate wires labels."
                 self._validation_messages.append(msg)
 
@@ -223,7 +225,9 @@ class Validator:
             self._validation_messages.append(msg)
 
         # check that statements are applied to the correct number of wires
-        if len(stmt.wires) != len(declarations[idx].wires):
+        if declarations[idx].wires != ARBITRARY_NUM_WIRES and len(stmt.wires) != len(
+            declarations[idx].wires
+        ):
             expected = len(declarations[idx].wires)
             msg = f"Statement '{stmt}' has {len(stmt.wires)} wire(s). Expected {expected}."
             self._validation_messages.append(msg)

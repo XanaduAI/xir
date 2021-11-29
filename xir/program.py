@@ -24,6 +24,8 @@ Wire = Union[int, str]
 Param = Union[complex, str, Decimal, DecimalComplex, bool, List["Param"]]
 Params = Union[List[Param], Dict[str, Param]]
 
+ARBITRARY_NUM_WIRES = "..."
+
 
 def get_floats(params: Params) -> Params:
     """Converts `decimal.Decimal` and `DecimalComplex` objects to ``float`` and
@@ -141,9 +143,9 @@ class ObservableFactor:
     """Observable factor to be used in observable definitions.
 
     Args:
-        name (str): the name of the factor
-        params ([Any]): the parameters of the factor
-        wires ([int]): the wires this factor acts on
+        name (str): name of the factor
+        params (Params): the parameters of the factor
+        wires (Sequence[Wire]): the wires this factor acts on
     """
 
     def __init__(self, name: str, params: Params, wires: Sequence[Wire]) -> None:
@@ -152,12 +154,11 @@ class ObservableFactor:
         self.wires = tuple(wires or [])
 
     def __str__(self) -> str:
-        wires = ", ".join([str(v) for v in self.wires])
-        if len(self.params) == 0:
+        wires = ", ".join(map(str, self.wires))
+        if self.params:
             return f"{self.name}[{wires}]"
-        else:
-            params = ", ".join([str(v) for v in self.params])
-            return f"{self.name}({params})[{wires}]"
+        params = ", ".join(map(str, self.params))
+        return f"{self.name}({params})[{wires}]"
 
 
 class ObservableStmt:
@@ -226,7 +227,7 @@ class Declaration:
         name: str,
         type_: str,
         params: Optional[Sequence[str]] = None,
-        wires: Optional[Sequence[Wire]] = None,
+        wires: Optional[Union[Sequence[Wire], ARBITRARY_NUM_WIRES]] = None,
     ) -> None:
         if type_ not in ("gate", "out", "obs", "func"):
             raise TypeError(f"Declaration type '{type_}' is invalid.")
@@ -234,7 +235,12 @@ class Declaration:
         self._name = name
         self._type = type_
         self._params = list(params or [])
-        self._wires = tuple(wires or ())
+        self._any_wires = False
+        if wires == ARBITRARY_NUM_WIRES:
+            self._wires = ARBITRARY_NUM_WIRES
+            self._any_wires = True
+        else:
+            self._wires = tuple(wires or ())
 
     def __str__(self) -> str:
         """Serialized string representation of a declaration."""
@@ -242,7 +248,10 @@ class Declaration:
         if self.params:
             params = "(" + ", ".join(map(str, self.params)) + ")"
         if self.wires:
-            wires = "[" + ", ".join(map(str, self.wires)) + "]"
+            if self.wires == ARBITRARY_NUM_WIRES:
+                wires = f"[{ARBITRARY_NUM_WIRES}]"
+            else:
+                wires = "[" + ", ".join(map(str, self.wires)) + "]"
 
         return f"{self._type} {self.name}{params}{wires}"
 

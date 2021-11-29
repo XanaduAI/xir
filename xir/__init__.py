@@ -17,8 +17,15 @@ __all__ = [
 ]
 
 
-def parse_script(script: str, debug=True, **kwargs) -> Program:
-    """Parses an XIR script into a structured :class:`xir.Program`."""
+def parse_script(script: str, debug: bool = True, **kwargs) -> Program:
+    """
+    Parses an XIR script into a structured :class:`xir.Program`.
+
+    script (str): xir script as a string.
+    debug (bool): if false lark tree building will be skipped, and lark rule collisions will not be
+    given a warning.
+    """
+
     if debug:
         parser = lark.Lark(
             grammar=read_lark_file(),
