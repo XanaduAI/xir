@@ -80,7 +80,9 @@ class TestParser:
     )
     def test_constants(self, key, val, expected):
         """Test script-level constants."""
-        program = parse_script(f"constants:\n    {key}: {val};\nend;", use_floats=True, eval_pi=True)
+        program = parse_script(
+            f"constants:\n    {key}: {val};\nend;", use_floats=True, eval_pi=True
+        )
         assert key in program.constants
         assert program.constants[key] == expected
 
