@@ -12,6 +12,7 @@ from .utils import simplify_math
 
 ENUM_WIRES = "ENUM_WIRES"
 
+
 def read_lark_file() -> str:
     """Reads the contents of the XIR Lark grammar file."""
     path = Path(__file__).parent / "xir.lark"
@@ -177,12 +178,7 @@ class Transformer(lark.Transformer):
     def gate_def(self, name, params_list, wires, *stmts):
         """Gate definition. Starts with keyword 'gate'. Adds gate to program."""
 
-        has_declared_wires = False
-        if wires is not None and len(wires) > 0:
-            has_declared_wires = True
-
-
-        if not has_declared_wires:
+        if wires is None:
             max_wire = 0
             for stmt in stmts:
                 int_wires = [w for w in stmt.wires if isinstance(w, int)]
