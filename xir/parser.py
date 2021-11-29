@@ -177,7 +177,6 @@ class Transformer(lark.Transformer):
     def gate_def(self, name, params_list, wires, *stmts):
         """Gate definition. Starts with keyword 'gate'. Adds gate to program."""
 
-        max_wire = 0
         has_declared_wires = False
         if wires is not None and len(wires) > 0:
             has_declared_wires = True
@@ -235,6 +234,20 @@ class Transformer(lark.Transformer):
 
     @v_args(inline=True)
     def obs_def(self, name, params, wires, statements):
+
+        if wires is None:
+            max_wire = 0
+            for stmt in statements:
+                for factor in stmt.factors:
+                    int_wires = [w for w in factor.wires if isinstance(w, int)]
+                    if int_wires and max(int_wires) > max_wire:
+                        max_wire = max(int_wires)
+
+            wires = tuple(range(max_wire + 1))
+        else:
+            # remove duplicate wires while maintaining order
+            wires = tuple(dict.fromkeys(wires))
+
         params = tuple(params[1]) if params is not None else tuple()
         self._program.add_observable(name, params, wires, statements)
 

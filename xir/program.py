@@ -535,13 +535,6 @@ class Program:
                 f"Observable '{name}' already defined."
                 "Replacing old definition with new definition."
             )
-        if wires is None:
-            wires = []
-            for statement in statements:
-                for factor in statement.factors:
-                    for wire in factor.wires:
-                        if wire not in wires:
-                            wires.append(wire)
         self.add_declaration(Declaration(name, "obs", params, wires))
         self._observables[name] = statements
 
