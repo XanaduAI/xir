@@ -340,8 +340,9 @@ Notes
 Keywords
 --------
 
+* ``constants``: Start of constants block section.
 * ``ctrl``: Control wires modifier for statements.
-* ``end``: End of a definition or options section.
+* ``end``: End of a definition, options or constants section.
 * ``false``: Boolean false.
 * ``func``: Declaration of mathematical functions.
 * ``gate``: Gate declaration or definition.

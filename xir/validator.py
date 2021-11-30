@@ -176,7 +176,7 @@ class Validator:
             * A gate application statement specifies the wrong number of wires.
             * A gate application statement specifies the wrong number of parameters.
             * A gate application statement specifies the wrong parameter names.
-            * A gate application statement at the script-level is applied to named wires.
+            * A gate application statement at the script level is applied to named wires.
 
         Checks that modifiers such as ``ctrl`` and ``inv`` are correctly applied.
         The modifiers will be marked as invalid if:
@@ -246,11 +246,11 @@ class Validator:
         Checks the remaining conditions documented (but not implemented) by
         :func:`Validator._check_statements()`.
         """
-        # check that only integer wire labels are used at a script-level
+        # check that only integer wire labels are used at a script level
         if declared_params is None and any(isinstance(wire, str) for wire in stmt.wires):
             msg = (
                 f"Statement '{stmt}' is applied to named wires. Only integer wire labels are "
-                "allowed at a script-level."
+                "allowed at a script level."
             )
             self._validation_messages.append(msg)
 
@@ -359,11 +359,11 @@ class Validator:
             )
             self._validation_messages.append(msg)
 
-        if set(declared_wires).intersection(set(declared_params)):
+        if set(declared_wires) & set(declared_params):
             msg = f"Definition '{name}' is invalid. Wire and parameter names must differ."
             self._validation_messages.append(msg)
 
-        constants_declared = set(declared_params).intersection(self._program.constants)
+        constants_declared = set(declared_params) & set(self._program.constants)
         if constants_declared:
             msg = (
                 f"Definition '{name}' is invalid. Cannot use declared constant(s) "
