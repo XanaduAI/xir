@@ -113,6 +113,22 @@ set of supported options and choose their semantics.
         tags: [experimental, d20];  // Associate some tags with the program result.
     end;
 
+Constants
+---------
+
+The ``constants`` block provides a way to declare constants that can be referenced
+in other parts of the script. The syntax for specifying options is analogous to
+that of a (flat) JSON object or Python dictionary.
+
+.. code-block:: text
+
+    constants:
+        parameter_array: [1, 2, 3, 4];
+        U: [[0.50902901+0.62151867j, -0.50774987+0.31111745j],
+            [0.57730909+0.14600757j,  0.30112128-0.7447966j]]
+        phi: 1.61803398875;
+    end;
+
 Declarations
 ------------
 
