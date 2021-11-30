@@ -65,6 +65,43 @@ class TestParser:
         assert irprog.options[key] == val
 
     @pytest.mark.parametrize(
+        "key, val, expected",
+        [
+            ("cutoff", "5", 5),
+            ("anything", "4.2", 4.2),
+            ("a_number", "3 + 2.1", 5.1),
+            ("a_number_with_pi", "pi / 2", math.pi / 2),
+            ("a_string", "hello", "hello"),
+            ("a_string", "PI", "PI"),
+            ("a_string", "obs", "obs"),
+            ("True", "False", "False"),
+            ("true", "false", False),
+        ],
+    )
+    def test_constants(self, key, val, expected):
+        """Test script-level constants."""
+        program = parse_script(
+            f"constants:\n    {key}: {val};\nend;", use_floats=True, eval_pi=True
+        )
+        assert key in program.constants
+        assert program.constants[key] == expected
+
+    @pytest.mark.parametrize(
+        "key, val",
+        [
+            ("key", ["compound", "value"]),
+            ("True", [1, 2, "False"]),
+            ("key", [1, [2, [3, 4]]]),
+        ],
+    )
+    def test_constants_lists(self, key, val):
+        """Test script-level constants with lists."""
+        val_str = "[" + ", ".join(map(str, val)) + "]"
+        program = parse_script(f"constants:\n    {key}: {val_str};\nend;")
+        assert key in program.constants
+        assert program.constants[key] == val
+
+    @pytest.mark.parametrize(
         "script, inverse",
         [
             ("inv ry(2.4) | [2];", True),

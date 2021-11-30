@@ -76,6 +76,16 @@ class TestValidatorIntegration:
             program = xir.parse_script(decl)
             xir.Validator(program).run()
 
+    def test_check_pi_constant(self):
+        """Test that using pi in a constant declaration raises the correct exception."""
+        constants_block = "constants: pi: 123; end;"
+        msg = "Constant 'pi' is already defined and cannot be replaced."
+
+        match = self._create_full_match([msg])
+        with pytest.raises(xir.validator.ValidationError, match=match):
+            program = xir.parse_script(constants_block)
+            xir.Validator(program).run()
+
     @pytest.mark.parametrize(
         "decl, matches",
         [
@@ -167,7 +177,7 @@ class TestValidatorIntegration:
                 [
                     (
                         "Statement 'Sample | [x, y]' is applied to named wires. Only integer wire "
-                        "labels are allowed at a script level."
+                        "labels are allowed at the script level."
                     )
                 ],
             ),
@@ -253,6 +263,15 @@ class TestValidatorIntegration:
                     (
                         "Definition 'MyGate' is invalid. Applied wires [2, a] differ from "
                         "declared wires [0, 1, 2]."
+                    )
+                ],
+            ),
+            (
+                "constants: a: 1.23; end; gate MyGate(a): BSgate(a, 0.0) | [0, 1]; end;",
+                [
+                    (
+                        "Definition 'MyGate' is invalid. Cannot use declared constant(s) "
+                        "{'a'} as parameter(s)."
                     )
                 ],
             ),

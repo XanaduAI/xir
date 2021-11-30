@@ -69,9 +69,14 @@ class Transformer(lark.Transformer):
                 self._program.add_statement(stmt)
 
     def script_options(self, args):
-        """Script level options. Adds any options to the program."""
+        """Script-level options. Adds any options to the program."""
         for name, value in args:
             self._program.add_option(name, value)
+
+    def constants(self, args):
+        """Script-level constants. Adds any constant to the program."""
+        for name, value in args:
+            self._program.add_constant(name, value)
 
     ###############
     # basic types

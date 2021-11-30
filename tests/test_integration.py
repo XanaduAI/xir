@@ -19,6 +19,27 @@ Rgate(0.2) | [1];
 MeasureHomodyne(phi: 3) | [0];
 """
 
+tdm_script = """
+use <xc/tdm>;
+
+options:
+    type: tdm;
+    N: [2, 3];
+end;
+
+constants:
+    p0: [3.141592653589793, 4.71238898038469, 0];
+    p1: [1, 0.5, 3.141592653589793];
+    p2: [0, 0, 0];
+end;
+
+Sgate(0.123, 0.7853981633974483) | [2];
+BSgate(p0, 0.0) | [1, 2];
+Rgate(p1) | [2];
+MeasureHomodyne(phi: p0) | [0];
+MeasureHomodyne(phi: p2) | [2];
+"""
+
 photonics_script_no_decl = """
 use photonics_gates;
 
@@ -120,7 +141,14 @@ class TestParser:
 
     @pytest.mark.parametrize(
         "circuit",
-        [qubit_script, photonics_script, photonics_script_no_decl, jet_script, simple_script],
+        [
+            qubit_script,
+            photonics_script,
+            photonics_script_no_decl,
+            tdm_script,
+            jet_script,
+            simple_script,
+        ],
     )
     def test_parse_and_serialize(self, circuit):
         """Test parsing and serializing an XIR script.
