@@ -246,11 +246,11 @@ class Validator:
         Checks the remaining conditions documented (but not implemented) by
         :func:`Validator._check_statements()`.
         """
-        # check that only integer wire labels are used at a script level
+        # check that only integer wire labels are used at the script level
         if declared_params is None and any(isinstance(wire, str) for wire in stmt.wires):
             msg = (
                 f"Statement '{stmt}' is applied to named wires. Only integer wire labels are "
-                "allowed at a script level."
+                "allowed at the script level."
             )
             self._validation_messages.append(msg)
 

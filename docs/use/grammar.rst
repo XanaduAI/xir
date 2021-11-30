@@ -22,7 +22,15 @@ is expanded on in detail following some initial examples:
         dimension: 3;
     end;
 
-3. **Declarations.** Declarations of gates, observables, functions, and outputs.
+3. **Constants.** Constants at the global scope.
+
+.. code-block:: text
+
+    constants:
+        parameter_array: [1, 2, 3, 4];
+    end;
+
+4. **Declarations.** Declarations of gates, observables, functions, and outputs.
 
 .. code-block:: text
 
@@ -32,7 +40,7 @@ is expanded on in detail following some initial examples:
     out amplitude(state) [0..2];
 
 
-4. **Definitions.** Definitions of gates and observables.
+5. **Definitions.** Definitions of gates and observables.
 
 .. code-block:: text
 
@@ -42,7 +50,7 @@ is expanded on in detail following some initial examples:
         H | [b];  // Apply a Hadamard to the second wire.
     end;
 
-5. **Statements.** Gate application statements and measurements.
+6. **Statements.** Gate application statements and measurements.
 
 .. code-block:: text
 
@@ -117,8 +125,8 @@ Constants
 ---------
 
 The ``constants`` block provides a way to declare constants that can be referenced
-in other parts of the script. The syntax for specifying constants is analogous to
-that of a (flat) JSON object or Python dictionary.
+as parameter values in other parts of the script. The syntax for specifying constants
+is the same as the ``options`` block (up to the opening keyword).
 
 .. code-block:: text
 

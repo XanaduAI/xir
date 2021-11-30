@@ -167,7 +167,7 @@ class TestValidatorIntegration:
                 [
                     (
                         "Statement 'Sample | [x, y]' is applied to named wires. Only integer wire "
-                        "labels are allowed at a script level."
+                        "labels are allowed at the script level."
                     )
                 ],
             ),
