@@ -76,6 +76,16 @@ class TestValidatorIntegration:
             program = xir.parse_script(decl)
             xir.Validator(program).run()
 
+    def test_check_pi_constant(self):
+        """Test that using pi in a constant declaration raise the correct exceptions."""
+        constants_block = "constants: pi: 123; end;"
+        msg = "Constant 'pi' is already defined and cannot be replaced."
+
+        match = self._create_full_match([msg])
+        with pytest.raises(xir.validator.ValidationError, match=match):
+            program = xir.parse_script(constants_block)
+            xir.Validator(program).run()
+
     @pytest.mark.parametrize(
         "decl, matches",
         [

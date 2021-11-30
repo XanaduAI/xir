@@ -8,7 +8,7 @@ from typing import MutableSet, Optional, Sequence, Union
 from xir.decimal_complex import DecimalComplex
 from xir.program import Declaration, ObservableStmt, Param, Program, Statement, Wire
 
-VALID_CONSTANTS = "PI"
+VALID_CONSTANTS = {"PI"}
 
 
 class ValidationError(Exception):
@@ -103,7 +103,12 @@ class Validator:
         self._program = program
         self.has_includes = len(program.includes) > 0
 
-        self._validators = {"declarations": True, "statements": True, "definitions": True}
+        self._validators = {
+            "constants": True,
+            "declarations": True,
+            "statements": True,
+            "definitions": True,
+        }
 
     def run(self, raise_exception: bool = True) -> Optional[Sequence[str]]:
         """Runs the validation checks.
@@ -122,6 +127,9 @@ class Validator:
         # reset validation messages in case previously run
         self._validation_messages = []
 
+        if self._validators["constants"]:
+            self._check_constants()
+
         if self._validators["declarations"]:
             self._check_declarations()
 
@@ -137,6 +145,14 @@ class Validator:
             raise ValidationError(self._validation_messages)
 
         return self._validation_messages or None
+
+    def _check_constants(self) -> None:
+        """Checks that constants are correctly declared."""
+        for const in self._program.constants.keys():
+            # grammar uses lowercase constants, while the program uses upper-case
+            if const in map(str.lower, VALID_CONSTANTS):
+                msg = f"Constant '{const}' is already defined and cannot be replaced."
+                self._validation_messages.append(msg)
 
     def _check_declarations(self) -> None:
         """Checks that declarations are valid.
