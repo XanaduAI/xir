@@ -147,7 +147,7 @@ class Validator:
         return self._validation_messages or None
 
     def _check_constants(self) -> None:
-        """Checks that constants are correctly declared."""
+        """Checks that the declared constants are valid."""
         for const in self._program.constants.keys():
             # grammar uses lowercase constants, while the program uses upper-case
             if const in map(str.lower, VALID_CONSTANTS):

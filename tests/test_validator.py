@@ -77,7 +77,7 @@ class TestValidatorIntegration:
             xir.Validator(program).run()
 
     def test_check_pi_constant(self):
-        """Test that using pi in a constant declaration raise the correct exceptions."""
+        """Test that using pi in a constant declaration raises the correct exception."""
         constants_block = "constants: pi: 123; end;"
         msg = "Constant 'pi' is already defined and cannot be replaced."
 
