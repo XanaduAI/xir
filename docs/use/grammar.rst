@@ -117,7 +117,7 @@ Constants
 ---------
 
 The ``constants`` block provides a way to declare constants that can be referenced
-in other parts of the script. The syntax for specifying options is analogous to
+in other parts of the script. The syntax for specifying constants is analogous to
 that of a (flat) JSON object or Python dictionary.
 
 .. code-block:: text
