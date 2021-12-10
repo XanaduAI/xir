@@ -1,4 +1,4 @@
-## Release 0.1.1 (development release)
+## Release 0.1.1 (current release)
 
 ### New features since last release
 
@@ -28,6 +28,9 @@
 
 * `xir.Validator` now also checks that parameters used in definitions are not declared constants.
   [(#7)](https://github.com/XanaduAI/xir/pull/7)
+
+* The XIR package is now automatically uploaded to PyPI when a new release is published.
+  [(#9)](https://github.com/XanaduAI/xir/pull/9)
 
 ### Bug Fixes
 
