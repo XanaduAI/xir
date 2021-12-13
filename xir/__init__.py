@@ -39,16 +39,15 @@ def parse_script(script: str, debug: bool = False, **kwargs) -> Program:
     """
 
     if debug:
-        parser = lark.Lark(
+        debug_parser = lark.Lark(
             grammar=_read_lark_file(),
             maybe_placeholders=True,
             start="program",
             parser="lalr",
             debug=True,
         )
-        tree = parser.parse(script)
+        tree = debug_parser.parse(script)
         return Transformer(**kwargs).transform(tree)
-
     parser = lark.Lark(
         grammar=_read_lark_file(),
         maybe_placeholders=True,
