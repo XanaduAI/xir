@@ -48,7 +48,7 @@ def parse_script(script: str, debug: bool = False, **kwargs) -> Program:
         )
         tree = parser.parse(script)
         return Transformer(**kwargs).transform(tree)
-    
+
     parser = lark.Lark(
         grammar=_read_lark_file(),
         maybe_placeholders=True,
