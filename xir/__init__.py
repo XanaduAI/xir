@@ -17,6 +17,7 @@ __all__ = [
     "Transformer",
 ]
 
+
 def _read_lark_file() -> str:
     """Reads the contents of the XIR Lark grammar file."""
     path = Path(__file__).parent / "xir.lark"
@@ -24,11 +25,7 @@ def _read_lark_file() -> str:
         return file.read()
 
 
-def parse_script(
-        script: str,
-        debug: bool = False,
-        **kwargs
-    ) -> Program:
+def parse_script(script: str, debug: bool = False, **kwargs) -> Program:
     """
     Parses an XIR script into a structured :class:`xir.Program`.
 
