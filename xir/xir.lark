@@ -33,8 +33,9 @@ obs_factor: obs [params] wires
 ?obs: name
 
 // wires and parameters
-?wires_or_enum: "[" wire_list "]" | "[" ARBITRARY_NUM_WIRES "]"
+?wires_or_enum: (wires | enum)
 ?wires: "[" wire_list "]"
+?enum: "[" ARBITRARY_NUM_WIRES "]"
 wire_list : (wire | range_) ("," (wire | range_))*
 ?wire : uint | name
 

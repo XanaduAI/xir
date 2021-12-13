@@ -127,14 +127,14 @@ class TestSerialize:
     def test_observable_stmt(self, program, pref, wires):
         """Tests serializing an XIR program with observable statements."""
         xyz = "XYZ"
-        terms = [xir.ObservableFactor(xyz[i], None, w) for i, w in enumerate(wires)]
-        terms_str = " @ ".join(str(t) for t in terms)
+        factors = [xir.ObservableFactor(xyz[i], None, w) for i, w in enumerate(wires)]
+        factors_str = " @ ".join(str(t) for t in factors)
         wires_str = ", ".join(wires)
 
-        program.add_observable("H", ["a", "b"], wires, [xir.ObservableStmt(pref, terms)])
+        program.add_observable("H", ["a", "b"], wires, [xir.ObservableStmt(pref, factors)])
 
         res = program.serialize()
-        assert res == f"obs H(a, b)[{wires_str}]:\n    {pref}, {terms_str};\nend;"
+        assert res == f"obs H(a, b)[{wires_str}]:\n    {pref}, {factors_str};\nend;"
 
     #########################
     # Test gate definitions

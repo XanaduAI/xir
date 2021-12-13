@@ -150,8 +150,8 @@ class ObservableFactor:
 
     def __init__(self, name: str, params: Params, wires: Sequence[Wire]) -> None:
         self.name = name
-        self.params = list(params or [])
-        self.wires = tuple(wires or [])
+        self.params = params or []
+        self.wires = wires or []
 
     def __str__(self) -> str:
         wires = ", ".join(map(str, self.wires))
@@ -173,7 +173,7 @@ class ObservableStmt:
     def __init__(
         self,
         pref: Union[Decimal, int, str],
-        factors: List[ObservableFactor],
+        factors: Sequence[ObservableFactor],
         use_floats: bool = True,
     ):
         self._pref = pref
@@ -235,10 +235,8 @@ class Declaration:
         self._name = name
         self._type = type_
         self._params = list(params or [])
-        self._any_wires = False
         if wires == ARBITRARY_NUM_WIRES:
             self._wires = ARBITRARY_NUM_WIRES
-            self._any_wires = True
         else:
             self._wires = tuple(wires or ())
 

@@ -1,7 +1,6 @@
 """This module contains the :class:`xir.Transformer` class and the XIR parser."""
 import math
 from decimal import Decimal
-from pathlib import Path
 
 import lark
 from lark import v_args
@@ -16,13 +15,6 @@ from .program import (
     ARBITRARY_NUM_WIRES,
 )
 from .utils import simplify_math
-
-
-def read_lark_file() -> str:
-    """Reads the contents of the XIR Lark grammar file."""
-    path = Path(__file__).parent / "xir.lark"
-    with path.open("r") as file:
-        return file.read()
 
 
 class Transformer(lark.Transformer):
@@ -187,8 +179,7 @@ class Transformer(lark.Transformer):
             max_wire = 0
             for stmt in stmts:
                 int_wires = [w for w in stmt.wires if isinstance(w, int)]
-                if int_wires and max(int_wires) > max_wire:
-                    max_wire = max(int_wires)
+                max_wire = max((max_wire, *int_wires))
 
             wires = tuple(range(max_wire + 1))
         else:
@@ -236,6 +227,16 @@ class Transformer(lark.Transformer):
 
     @v_args(inline=True)
     def obs_def(self, name, params, wires, statements):
+        """
+            obs def, creates an observable def from xir text of the form:
+            `obs my_obs(params)[0]: 1, obs_1[0]; 0.5, obs_2[1]; end;
+
+            name: observable name.
+            params: observable params.
+            wires: observable wires.
+            statements: list of statements.
+
+        """
 
         if wires is None:
             max_wire = 0
@@ -258,6 +259,7 @@ class Transformer(lark.Transformer):
 
     @v_args(inline=True)
     def obs_stmt(self, pref, factors):
+        """Observable statement. Defined inside an observable definition."""
         return ObservableStmt(simplify_math(pref), factors, use_floats=self.use_floats)
 
     def obs_group(self, factors):
@@ -265,6 +267,7 @@ class Transformer(lark.Transformer):
 
     @v_args(inline=True)
     def obs_factor(self, name, params, wires):
+        """Obs Factor. add obs factor to a dec"""
         return ObservableFactor(name, params, wires)
 
     ################
