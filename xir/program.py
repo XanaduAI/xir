@@ -104,7 +104,7 @@ class Statement:
 
     @property
     def name(self) -> str:
-        """Returns the name of the gate statement."""
+        """Returns the name of the gate statement"""
         return self._name
 
     @property
