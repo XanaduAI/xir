@@ -229,12 +229,13 @@ class Transformer(lark.Transformer):
     def obs_def(self, name, params, wires, statements):
         """
         obs def, creates an observable def from xir text of the form:
-        `obs my_obs(params)[0]: 1, obs_1[0]; 0.5, obs_2[1]; end;
+        `obs my_obs(params)[0]: 1, obs_1[0]; 0.5, obs_2[1]; end;`
 
-        name: observable name.
-        params: observable params.
-        wires: observable wires.
-        statements: list of statements.
+        Args:
+            name: observable name.
+            params: observable params.
+            wires: observable wires.
+            statements: list of statements.
 
         """
 
