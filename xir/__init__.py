@@ -32,7 +32,8 @@ def parse_script(script: str, debug: bool = False, **kwargs) -> Program:
 
     Args:
         script (str): xir script as a string.
-        debug (bool): if false lark tree building will be skipped, and lark rule collisions will not be
+        debug (bool): if false lark tree building will be skipped, and lark rule collisions
+        will not be
         given a warning.
         kwargs: options to be passed to the transformer.
     """
@@ -47,13 +48,13 @@ def parse_script(script: str, debug: bool = False, **kwargs) -> Program:
         )
         tree = parser.parse(script)
         return Transformer(**kwargs).transform(tree)
-    else:
-        parser = lark.Lark(
-            grammar=_read_lark_file(),
-            maybe_placeholders=True,
-            start="program",
-            parser="lalr",
-            debug=False,
-            transformer=Transformer(**kwargs),
-        )
-        return parser.parse(script)
+    
+    parser = lark.Lark(
+        grammar=_read_lark_file(),
+        maybe_placeholders=True,
+        start="program",
+        parser="lalr",
+        debug=False,
+        transformer=Transformer(**kwargs),
+    )
+    return parser.parse(script)
