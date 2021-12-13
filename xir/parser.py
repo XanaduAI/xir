@@ -255,6 +255,7 @@ class Transformer(lark.Transformer):
         self._program.add_observable(name, params, wires, statements)
 
     def obs_stmt_list(self, stmts):
+        """Observable statement list"""
         return stmts
 
     @v_args(inline=True)
@@ -263,6 +264,7 @@ class Transformer(lark.Transformer):
         return ObservableStmt(simplify_math(pref), factors, use_floats=self.use_floats)
 
     def obs_group(self, factors):
+        "Observable Factors"
         return factors
 
     @v_args(inline=True)
@@ -293,6 +295,7 @@ class Transformer(lark.Transformer):
         return args
 
     def ARBITRARY_NUM_WIRES(self, _):
+        """Arbitrary number of wires."""
         return ARBITRARY_NUM_WIRES
 
     @v_args(inline=True)
