@@ -7,12 +7,12 @@ from lark import v_args
 
 from .decimal_complex import DecimalComplex
 from .program import (
+    ARBITRARY_NUM_WIRES,
     Declaration,
+    ObservableFactor,
     ObservableStmt,
     Program,
     Statement,
-    ObservableFactor,
-    ARBITRARY_NUM_WIRES,
 )
 from .utils import simplify_math
 

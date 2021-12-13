@@ -5,9 +5,8 @@ from decimal import Decimal
 from itertools import chain
 from typing import MutableSet, Optional, Sequence, Union
 
-from xir.parser import ARBITRARY_NUM_WIRES
-
 from xir.decimal_complex import DecimalComplex
+from xir.parser import ARBITRARY_NUM_WIRES
 from xir.program import Declaration, ObservableStmt, Param, Program, Statement, Wire
 
 VALID_CONSTANTS = "PI"

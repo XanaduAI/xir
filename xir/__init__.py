@@ -1,10 +1,11 @@
-from lark import lark
 from pathlib import Path
+
+from lark import lark
 
 from ._version import __version__
 from .decimal_complex import DecimalComplex
 from .parser import Transformer
-from .program import Declaration, ObservableStmt, Program, Statement, ObservableFactor
+from .program import Declaration, ObservableFactor, ObservableStmt, Program, Statement
 from .validator import Validator
 
 __all__ = [

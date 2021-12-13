@@ -196,7 +196,7 @@ class ObservableStmt:
         return self._pref
 
     @property
-    def factors(self) -> List:
+    def factors(self) -> Sequence[ObservableStmt]:
         """Returns the terms in this observable statement."""
         return self._factors
 
