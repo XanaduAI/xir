@@ -259,7 +259,7 @@ class Transformer(lark.Transformer):
 
     @v_args(inline=True)
     def obs_stmt(self, pref, factors):
-        """observable statement. create an ObservableStmt from prefactor and factors."""
+        """create an ObservableStmt from prefactor and factors."""
         return ObservableStmt(simplify_math(pref), factors, use_floats=self.use_floats)
 
     def obs_group(self, factors):
@@ -297,7 +297,7 @@ class Transformer(lark.Transformer):
 
     @v_args(inline=True)
     def func_decl(self, name, params):
-        """Function declaration. Adds declaration to program."""
+        """Function declaration. Adds function declaration to program."""
         params = params[1] if params else []
         decl = Declaration(name, type_="func", params=params)
         self._program.add_declaration(decl)
