@@ -13,9 +13,9 @@ option: name ":" val
 // declarations
 ?declaration: (gate_decl | obs_decl | func_decl | out_decl)
 
-gate_decl: _GATE name [params_list] wires_or_enum ";"
-obs_decl: _OP name [params_list] wires_or_enum ";"
-out_decl: _OUT name [params_list] wires_or_enum ";"
+gate_decl: _GATE name [params_list] wires_or_arbirary ";"
+obs_decl: _OP name [params_list] wires_or_arbirary ";"
+out_decl: _OUT name [params_list] wires_or_arbirary ";"
 func_decl: _FUNC name [params_list] ";"
 
 
@@ -33,9 +33,9 @@ obs_factor: obs [params] wires
 ?obs: name
 
 // wires and parameters
-?wires_or_enum: (wires | enum)
+?wires_or_arbirary: (wires | arbitrary)
 ?wires: "[" wire_list "]"
-?enum: "[" ARBITRARY_NUM_WIRES "]"
+?arbitrary: "[" ARBITRARY_NUM_WIRES "]"
 wire_list : (wire | range_) ("," (wire | range_))*
 ?wire : uint | name
 
