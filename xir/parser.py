@@ -228,8 +228,14 @@ class Transformer(lark.Transformer):
     @v_args(inline=True)
     def obs_def(self, name, params, wires, statements):
         """
-        obs def, creates an observable def from xir text of the form:
-        `obs my_obs(params)[0]: 1, obs_1[0]; 0.5, obs_2[1]; end;`
+        Creates an observable definition from text of the form:
+        
+        .. code-block:: text
+
+            obs my_obs(params)[0, 1]:
+                1, obs_1[0];
+                0.5, obs_2[1];
+            end;`
 
         Args:
             name: observable name.
