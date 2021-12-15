@@ -229,7 +229,7 @@ class Transformer(lark.Transformer):
     def obs_def(self, name, params, wires, statements):
         """
         Creates an observable definition from text of the form:
-        
+
         .. code-block:: text
 
             obs my_obs(params)[0, 1]:
