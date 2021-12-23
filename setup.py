@@ -12,7 +12,7 @@ info = {
     "include_package_data": True,
     "install_requires": requirements,
     "license": "Apache License 2.0",
-    "license_files" = ("LICENSE"),
+    "license_files": ["LICENSE"],
     "long_description_content_type": "text/markdown",
     "long_description": open("README.md").read(),
     "maintainer_email": "software@xanadu.ai",
