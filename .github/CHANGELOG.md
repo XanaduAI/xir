@@ -1,5 +1,15 @@
 ## Release 0.2.0 (development release)
 
+### Bug Fixes
+
+* The license file is included in the source distribution, even when using `setuptools <56.0.0`.
+  [(#11)](https://github.com/XanaduAI/xir/pull/11)
+
+### Contributors
+
+This release contains contributions from (in alphabetical order):
+
+[Bastian Zimmermann](https://github.com/BastianZim)
 
 ## Release 0.1.1 (current release)
 
