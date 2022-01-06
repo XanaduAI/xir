@@ -6,13 +6,7 @@ import lark
 from lark import v_args
 
 from .decimal_complex import DecimalComplex
-from .program import (
-    Declaration,
-    ObservableFactor,
-    ObservableStmt,
-    Program,
-    Statement,
-)
+from .program import Declaration, ObservableFactor, ObservableStmt, Program, Statement
 from .utils import simplify_math
 
 
