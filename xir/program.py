@@ -233,7 +233,7 @@ class Declaration:
         self._name = name
         self._type = type_
         self._params = list(params or [])
-        if ... == wires:
+        if wires == ...:
             self._wires = ...
         else:
             self._wires = tuple(wires or ())
