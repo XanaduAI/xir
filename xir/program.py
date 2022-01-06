@@ -24,8 +24,6 @@ Wire = Union[int, str]
 Param = Union[complex, str, Decimal, DecimalComplex, bool, List["Param"]]
 Params = Union[List[Param], Dict[str, Param]]
 
-ARBITRARY_NUM_WIRES = "..."
-
 
 def get_floats(params: Params) -> Params:
     """Converts `decimal.Decimal` and `DecimalComplex` objects to ``float`` and
@@ -227,7 +225,7 @@ class Declaration:
         name: str,
         type_: str,
         params: Optional[Sequence[str]] = None,
-        wires: Optional[Union[Sequence[Wire], ARBITRARY_NUM_WIRES]] = None,
+        wires: Optional[Union[Sequence[Wire], ...]] = None,
     ) -> None:
         if type_ not in ("gate", "out", "obs", "func"):
             raise TypeError(f"Declaration type '{type_}' is invalid.")
@@ -235,8 +233,8 @@ class Declaration:
         self._name = name
         self._type = type_
         self._params = list(params or [])
-        if wires == ARBITRARY_NUM_WIRES:
-            self._wires = ARBITRARY_NUM_WIRES
+        if ... == wires:
+            self._wires = ...
         else:
             self._wires = tuple(wires or ())
 
@@ -246,8 +244,8 @@ class Declaration:
         if self.params:
             params = "(" + ", ".join(map(str, self.params)) + ")"
         if self.wires:
-            if self.wires == ARBITRARY_NUM_WIRES:
-                wires = f"[{ARBITRARY_NUM_WIRES}]"
+            if self.wires == ...:
+                wires = f"[...]"
             else:
                 wires = "[" + ", ".join(map(str, self.wires)) + "]"
 

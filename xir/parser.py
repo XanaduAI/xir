@@ -7,7 +7,6 @@ from lark import v_args
 
 from .decimal_complex import DecimalComplex
 from .program import (
-    ARBITRARY_NUM_WIRES,
     Declaration,
     ObservableFactor,
     ObservableStmt,
@@ -306,7 +305,7 @@ class Transformer(lark.Transformer):
 
     def ARBITRARY_NUM_WIRES(self, _):
         """Arbitrary number of wires."""
-        return ARBITRARY_NUM_WIRES
+        return ...
 
     @v_args(inline=True)
     def func_decl(self, name, params):
