@@ -26,6 +26,7 @@ def _read_lark_file() -> str:
     with path.open("r") as file:
         return file.read()
 
+
 @lru_cache()
 def _get_parser(debug: bool = False, **kwargs):
     """
@@ -38,6 +39,7 @@ def _get_parser(debug: bool = False, **kwargs):
     Returns:
         a parsing function.
     """
+
     def _inner_script_parser(script):
         """
         Parse a script.
@@ -67,6 +69,7 @@ def _get_parser(debug: bool = False, **kwargs):
             transformer=Transformer(**kwargs),
         )
         return parser.parse(script)
+
     return _inner_script_parser
 
 

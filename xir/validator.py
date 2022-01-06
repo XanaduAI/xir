@@ -223,9 +223,7 @@ class Validator:
             self._validation_messages.append(msg)
 
         # check that statements are applied to the correct number of wires
-        if ... != declarations[idx].wires and len(stmt.wires) != len(
-            declarations[idx].wires
-        ):
+        if ... != declarations[idx].wires and len(stmt.wires) != len(declarations[idx].wires):
             expected = len(declarations[idx].wires)
             msg = f"Statement '{stmt}' has {len(stmt.wires)} wire(s). Expected {expected}."
             self._validation_messages.append(msg)
