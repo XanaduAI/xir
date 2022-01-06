@@ -245,7 +245,7 @@ class Declaration:
             params = "(" + ", ".join(map(str, self.params)) + ")"
         if self.wires:
             if self.wires == ...:
-                wires = f"[...]"
+                wires = "[...]"
             else:
                 wires = "[" + ", ".join(map(str, self.wires)) + "]"
 

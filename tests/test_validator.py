@@ -426,13 +426,14 @@ class TestValidatorIntegration:
             val.run()
 
     def test_arbitrary_num_wires(self):
+        """Test whether arbitrary num wires works with different numbers of wires"""
         script = inspect.cleandoc(
             """
             gate Sgate(a, b)[...];
             gate BSgate(theta, phi)[...];
-            
+
             ctrl[1] BSgate(0.1, 0.0) | [0, 2];
-            
+
             gate MyGate:
                 Sgate(0.7, 0) | [1];
                 BSgate(0.1, 0.0) | [0, 1];
@@ -450,7 +451,7 @@ class TestValidatorIntegration:
         program = xir.parse_script(script)
 
         val = xir.Validator(program)
-        val._validators.update(
+        val._validators.update(  # pylint: disable=protected-access
             {"statements": True, "definitions": True}
-        )  # pylint: disable=protected-access
+        ) 
         val.run()
