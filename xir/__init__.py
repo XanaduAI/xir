@@ -1,4 +1,5 @@
 from pathlib import Path
+from functools import lru_cache
 
 from lark import lark
 
@@ -25,6 +26,45 @@ def _read_lark_file() -> str:
     with path.open("r") as file:
         return file.read()
 
+@lru_cache()
+def _get_parser(debug: bool = False, **kwargs):
+    """
+    Create parser from options.
+
+    Args:
+        debug (bool): if false lark tree building will be skipped, and lark rule collisions
+        will not be given a warning.
+        kwargs: options to be passed to the transformer.
+    """
+    def _inner_script_parser(script):
+        """
+        Parse a script.
+
+        Args:
+            script (str): xir script as a string.
+        """
+        if debug:
+            debug_parser = lark.Lark(
+                grammar=_read_lark_file(),
+                maybe_placeholders=True,
+                start="program",
+                parser="lalr",
+                debug=True,
+            )
+            tree = debug_parser.parse(script)
+            return Transformer(**kwargs).transform(tree)
+
+        parser = lark.Lark(
+            grammar=_read_lark_file(),
+            maybe_placeholders=True,
+            start="program",
+            parser="lalr",
+            debug=False,
+            transformer=Transformer(**kwargs),
+        )
+        return parser.parse(script)
+    return _inner_script_parser
+
 
 def parse_script(script: str, debug: bool = False, **kwargs) -> Program:
     """
@@ -36,24 +76,4 @@ def parse_script(script: str, debug: bool = False, **kwargs) -> Program:
         will not be given a warning.
         kwargs: options to be passed to the transformer.
     """
-
-    if debug:
-        debug_parser = lark.Lark(
-            grammar=_read_lark_file(),
-            maybe_placeholders=True,
-            start="program",
-            parser="lalr",
-            debug=True,
-        )
-        tree = debug_parser.parse(script)
-        return Transformer(**kwargs).transform(tree)
-
-    parser = lark.Lark(
-        grammar=_read_lark_file(),
-        maybe_placeholders=True,
-        start="program",
-        parser="lalr",
-        debug=False,
-        transformer=Transformer(**kwargs),
-    )
-    return parser.parse(script)
+    return _get_parser(debug, **kwargs)(script)

@@ -424,3 +424,32 @@ class TestValidatorIntegration:
             val = xir.Validator(program)
             val._validators.update(validators)  # pylint: disable=protected-access
             val.run()
+
+
+    def test_arbitrary_num_wires(self):
+        script = inspect.cleandoc(
+            """
+            gate Sgate(a, b)[...];
+            gate BSgate(theta, phi)[...];
+            
+            ctrl[1] BSgate(0.1, 0.0) | [0, 2];
+            
+            gate MyGate:
+                Sgate(0.7, 0) | [1];
+                BSgate(0.1, 0.0) | [0, 1];
+                ctrl[1,1] Sgate(0.2, 0) | [0];
+                MooGate | [0, 2];
+            end;
+
+            gate MooGate[0, 2]:
+                Sgate(0, 0) | [0, 2];
+            end;
+
+
+            """
+        )
+        program = xir.parse_script(script)
+
+        val = xir.Validator(program)
+        val._validators.update({"statements": True, "definitions": True})  # pylint: disable=protected-access
+        val.run()
