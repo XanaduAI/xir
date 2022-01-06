@@ -425,7 +425,6 @@ class TestValidatorIntegration:
             val._validators.update(validators)  # pylint: disable=protected-access
             val.run()
 
-
     def test_arbitrary_num_wires(self):
         script = inspect.cleandoc(
             """
@@ -451,5 +450,7 @@ class TestValidatorIntegration:
         program = xir.parse_script(script)
 
         val = xir.Validator(program)
-        val._validators.update({"statements": True, "definitions": True})  # pylint: disable=protected-access
+        val._validators.update(
+            {"statements": True, "definitions": True}
+        )  # pylint: disable=protected-access
         val.run()
