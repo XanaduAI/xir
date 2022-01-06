@@ -35,6 +35,8 @@ def _get_parser(debug: bool = False, **kwargs):
         debug (bool): if false lark tree building will be skipped, and lark rule collisions
         will not be given a warning.
         kwargs: options to be passed to the transformer.
+    Returns:
+        a parsing function.
     """
     def _inner_script_parser(script):
         """
@@ -42,6 +44,8 @@ def _get_parser(debug: bool = False, **kwargs):
 
         Args:
             script (str): xir script as a string.
+        Returns:
+            Program representation of the script.
         """
         if debug:
             debug_parser = lark.Lark(
@@ -75,5 +79,7 @@ def parse_script(script: str, debug: bool = False, **kwargs) -> Program:
         debug (bool): if false lark tree building will be skipped, and lark rule collisions
         will not be given a warning.
         kwargs: options to be passed to the transformer.
+    Returns:
+        Program representation of the script.
     """
     return _get_parser(debug, **kwargs)(script)
