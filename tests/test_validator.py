@@ -453,5 +453,5 @@ class TestValidatorIntegration:
         val = xir.Validator(program)
         val._validators.update(  # pylint: disable=protected-access
             {"statements": True, "definitions": True}
-        ) 
+        )
         val.run()
