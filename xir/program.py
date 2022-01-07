@@ -35,6 +35,8 @@ def get_floats(params: Params) -> Params:
                 params_with_floats.append(complex(p))
             elif isinstance(p, Decimal):
                 params_with_floats.append(float(p))
+            elif isinstance(p, List):
+                params_with_floats.append(get_floats(p))
             else:
                 params_with_floats.append(p)
 
@@ -45,6 +47,8 @@ def get_floats(params: Params) -> Params:
                 params_with_floats[k] = complex(v)
             elif isinstance(v, Decimal):
                 params_with_floats[k] = float(v)
+            elif isinstance(v, List):
+                params_with_floats[k] = get_floats(v)
             else:
                 params_with_floats[k] = v
 
@@ -299,6 +303,7 @@ class Program:
 
         self._includes = []
         self._options = {}
+        self._constants = {}
         self._statements = []
 
         self._declarations = {key: [] for key in ("gate", "func", "out", "obs")}
@@ -399,7 +404,7 @@ class Program:
         """Returns the script-level options declared in the XIR program.
 
         Returns:
-            Mapping[str, Any]: declared scipt-level options
+            Mapping[str, Any]: declared script-level options
         """
         if self.use_floats:
             options_with_floats = get_floats(self._options)
@@ -408,6 +413,21 @@ class Program:
             if isinstance(options_with_floats, Dict):
                 return options_with_floats
         return self._options
+
+    @property
+    def constants(self) -> Mapping[str, Any]:
+        """Returns the script-level constants declared in the XIR program.
+
+        Returns:
+            Mapping[str, Any]: declared script-level constants
+        """
+        if self.use_floats:
+            constants_with_floats = get_floats(self._constants)
+            # The following condition should always be True. For more context,
+            # see https://github.com/XanaduAI/jet/pull/52/files#r681872696.
+            if isinstance(constants_with_floats, Dict):
+                return constants_with_floats
+        return self._constants
 
     @property
     def statements(self) -> Sequence[Statement]:
@@ -555,6 +575,18 @@ class Program:
 
         self._options[name] = value
 
+    def add_constant(self, name: str, value: Any) -> None:
+        """Adds a constant to the XIR program.
+
+        Args:
+            name (str): name of the constant
+            value (Any): value of the constant
+        """
+        if name in self._constants:
+            warnings.warn(f"Constant '{name}' already set. Replacing old value with new value.")
+
+        self._constants[name] = value
+
     def add_statement(self, statement: Statement) -> None:
         """Adds a statement to the XIR program.
 
@@ -592,6 +624,11 @@ class Program:
         if len(self.options) > 0:
             res.append("options:")
             res.extend([f"    {k}: {v};" for k, v in self.options.items()])
+            res.append("end;\n")
+
+        if len(self.constants) > 0:
+            res.append("constants:")
+            res.extend([f"    {k}: {v};" for k, v in self.constants.items()])
             res.append("end;\n")
 
         has_decl = False

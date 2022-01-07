@@ -22,7 +22,15 @@ is expanded on in detail following some initial examples:
         dimension: 3;
     end;
 
-3. **Declarations.** Declarations of gates, observables, functions, and outputs.
+3. **Constants.** Constants at the global scope.
+
+.. code-block:: text
+
+    constants:
+        parameter_array: [1, 2, 3, 4];
+    end;
+
+4. **Declarations.** Declarations of gates, observables, functions, and outputs.
 
 .. code-block:: text
 
@@ -32,7 +40,7 @@ is expanded on in detail following some initial examples:
     out amplitude(state) [0..2];
 
 
-4. **Definitions.** Definitions of gates and observables.
+5. **Definitions.** Definitions of gates and observables.
 
 .. code-block:: text
 
@@ -42,7 +50,7 @@ is expanded on in detail following some initial examples:
         H | [b];  // Apply a Hadamard to the second wire.
     end;
 
-5. **Statements.** Gate application statements and measurements.
+6. **Statements.** Gate application statements and measurements.
 
 .. code-block:: text
 
@@ -111,6 +119,22 @@ set of supported options and choose their semantics.
         dimension: 4;              // Set the Fock cutoff dimension for CV gates to 4.
         simplify: true;            // Simplify the circuit using gate identities.
         tags: [experimental, d20];  // Associate some tags with the program result.
+    end;
+
+Constants
+---------
+
+The ``constants`` block provides a way to declare constants that can be referenced
+as parameter values in other parts of the script. The syntax for specifying constants
+is the same as the ``options`` block (up to the opening keyword).
+
+.. code-block:: text
+
+    constants:
+        parameter_array: [1, 2, 3, 4];
+        U: [[0.50902901+0.62151867j, -0.50774987+0.31111745j],
+            [0.57730909+0.14600757j,  0.30112128-0.7447966j]]
+        phi: 1.61803398875;
     end;
 
 Declarations
@@ -324,14 +348,15 @@ Notes
 Keywords
 --------
 
+* ``constants``: Start of constants block section.
 * ``ctrl``: Control wires modifier for statements.
-* ``end``: End of a definition or options section.
+* ``end``: End of a definition, options or constants section.
 * ``false``: Boolean false.
 * ``func``: Declaration of mathematical functions.
 * ``gate``: Gate declaration or definition.
 * ``inv``: Inverse modifier for statements.
 * ``obs``: Observable declaration or definition.
-* ``options``: Start of script level options section.
+* ``options``: Start of script-level options section.
 * ``out``: Declaration of measurements and post-processing statistics.
 * ``pi``: Mathematical constant pi (:math:`\pi`).
 * ``true``: Boolean true.

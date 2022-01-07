@@ -8,7 +8,7 @@ from typing import MutableSet, Optional, Sequence, Union
 from xir.decimal_complex import DecimalComplex
 from xir.program import Declaration, ObservableStmt, Param, Program, Statement, Wire
 
-VALID_CONSTANTS = "PI"
+VALID_CONSTANTS = {"PI"}
 
 
 class ValidationError(Exception):
@@ -103,7 +103,12 @@ class Validator:
         self._program = program
         self.has_includes = len(program.includes) > 0
 
-        self._validators = {"declarations": True, "statements": True, "definitions": True}
+        self._validators = {
+            "constants": True,
+            "declarations": True,
+            "statements": True,
+            "definitions": True,
+        }
 
     def run(self, raise_exception: bool = True) -> Optional[Sequence[str]]:
         """Runs the validation checks.
@@ -122,6 +127,9 @@ class Validator:
         # reset validation messages in case previously run
         self._validation_messages = []
 
+        if self._validators["constants"]:
+            self._check_constants()
+
         if self._validators["declarations"]:
             self._check_declarations()
 
@@ -137,6 +145,14 @@ class Validator:
             raise ValidationError(self._validation_messages)
 
         return self._validation_messages or None
+
+    def _check_constants(self) -> None:
+        """Checks that the declared constants are valid."""
+        for const in self._program.constants.keys():
+            # grammar uses lowercase constants, while the program uses upper-case
+            if const in map(str.lower, VALID_CONSTANTS):
+                msg = f"Constant '{const}' is already defined and cannot be replaced."
+                self._validation_messages.append(msg)
 
     def _check_declarations(self) -> None:
         """Checks that declarations are valid.
@@ -170,7 +186,7 @@ class Validator:
         """Checks that statements are valid.
 
         Checks that all statements have a declaration and that they are correctly applied. If no
-        statements are passed, the script level statements in the program will be used. The
+        statements are passed, the script-level statements in the program will be used. The
         statements will be marked as invalid if:
 
             * A gate application statement specifies the wrong number of wires.
@@ -246,11 +262,11 @@ class Validator:
         Checks the remaining conditions documented (but not implemented) by
         :func:`Validator._check_statements()`.
         """
-        # check that only integer wire labels are used at a script level
+        # check that only integer wire labels are used at the script level
         if declared_params is None and any(isinstance(wire, str) for wire in stmt.wires):
             msg = (
                 f"Statement '{stmt}' is applied to named wires. Only integer wire labels are "
-                "allowed at a script level."
+                "allowed at the script level."
             )
             self._validation_messages.append(msg)
 
@@ -359,8 +375,16 @@ class Validator:
             )
             self._validation_messages.append(msg)
 
-        if set(declared_wires).intersection(set(declared_params)):
+        if set(declared_wires) & set(declared_params):
             msg = f"Definition '{name}' is invalid. Wire and parameter names must differ."
+            self._validation_messages.append(msg)
+
+        constants_declared = set(declared_params) & set(self._program.constants)
+        if constants_declared:
+            msg = (
+                f"Definition '{name}' is invalid. Cannot use declared constant(s) "
+                f"{constants_declared} as parameter(s)."
+            )
             self._validation_messages.append(msg)
 
     def _check_observable_statements(
