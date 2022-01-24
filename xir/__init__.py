@@ -88,8 +88,7 @@ def _get_parser(debug: bool = False, **kwargs):
 
 
 def parse_script(script: str, debug: bool = False, **kwargs) -> Program:
-    """
-    Parses an XIR script into a structured :class:`xir.Program`.
+    """Parses an XIR script into a structured :class:`xir.Program`.
 
     Args:
         script (str): xir script as a string.

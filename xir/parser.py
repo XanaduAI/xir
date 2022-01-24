@@ -301,7 +301,7 @@ class Transformer(lark.Transformer):
         self._program.add_declaration(decl)
 
     def wire_list(self, args):
-        """list of wires"""
+        """List of wires."""
         return args
 
     def ARBITRARY_NUM_WIRES(self, _):
