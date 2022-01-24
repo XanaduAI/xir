@@ -62,13 +62,13 @@ def _get_parser(debug: bool = False, **kwargs):
     )
 
     def _inner_script_parser(script):
-        """
-        Parse a script.
+        """Parse a script.
 
         Args:
-            script (str): xir script as a string.
+            script (str): XIR script as a string
+
         Returns:
-            Program representation of the script.
+            xir.Program: program representation of the script
         """
         parser = lark.Lark(
             grammar=_read_lark_file(),
