@@ -85,6 +85,7 @@ author = "Xanadu Inc."
 #
 # The full version, including alpha/beta/rc tags.
 import xir
+
 release = xir.__version__
 
 # The short X.Y version.
