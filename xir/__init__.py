@@ -40,6 +40,23 @@ def _get_parser(debug: bool = False, **kwargs):
         a parsing function.
     """
 
+    debug_parser = lark.Lark(
+        grammar=_read_lark_file(),
+        maybe_placeholders=True,
+        start="program",
+        parser="lalr",
+        debug=True,
+    )
+
+    parser = lark.Lark(
+        grammar=_read_lark_file(),
+        maybe_placeholders=True,
+        start="program",
+        parser="lalr",
+        debug=False,
+        transformer=Transformer(**kwargs),
+    )
+
     def _inner_script_parser(script):
         """
         Parse a script.
@@ -50,24 +67,8 @@ def _get_parser(debug: bool = False, **kwargs):
             Program representation of the script.
         """
         if debug:
-            debug_parser = lark.Lark(
-                grammar=_read_lark_file(),
-                maybe_placeholders=True,
-                start="program",
-                parser="lalr",
-                debug=True,
-            )
             tree = debug_parser.parse(script)
             return Transformer(**kwargs).transform(tree)
-
-        parser = lark.Lark(
-            grammar=_read_lark_file(),
-            maybe_placeholders=True,
-            start="program",
-            parser="lalr",
-            debug=False,
-            transformer=Transformer(**kwargs),
-        )
         return parser.parse(script)
 
     return _inner_script_parser
