@@ -1,4 +1,4 @@
-from functools import lru_cache
+from functools import lru_cache, partial
 from pathlib import Path
 
 from lark import lark
@@ -26,6 +26,20 @@ def _read_lark_file() -> str:
     with path.open("r") as file:
         return file.read()
 
+def _inner_script_parser(debug_parser, parser, debug, kwargs, script):
+    """
+    Parse a script.
+
+    Args:
+        script (str): xir script as a string.
+    Returns:
+        Program representation of the script.
+    """
+    if debug:
+        tree = debug_parser.parse(script)
+        return Transformer(**kwargs).transform(tree)
+    return parser.parse(script)
+
 
 @lru_cache()
 def _get_parser(debug: bool = False, **kwargs):
@@ -48,15 +62,6 @@ def _get_parser(debug: bool = False, **kwargs):
         debug=True,
     )
 
-    parser = lark.Lark(
-        grammar=_read_lark_file(),
-        maybe_placeholders=True,
-        start="program",
-        parser="lalr",
-        debug=False,
-        transformer=Transformer(**kwargs),
-    )
-
     def _inner_script_parser(script):
         """
         Parse a script.
@@ -66,6 +71,15 @@ def _get_parser(debug: bool = False, **kwargs):
         Returns:
             Program representation of the script.
         """
+        parser = lark.Lark(
+            grammar=_read_lark_file(),
+            maybe_placeholders=True,
+            start="program",
+            parser="lalr",
+            debug=False,
+            transformer=Transformer(**kwargs),
+        )
+        
         if debug:
             tree = debug_parser.parse(script)
             return Transformer(**kwargs).transform(tree)
