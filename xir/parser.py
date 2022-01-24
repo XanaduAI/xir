@@ -228,8 +228,7 @@ class Transformer(lark.Transformer):
 
     @v_args(inline=True)
     def obs_def(self, name, params, wires, statements):
-        """
-        Create an observable definition.
+        """Create an observable definition.
 
         Creates an observable definition from text of the form:
 
