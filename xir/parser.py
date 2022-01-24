@@ -278,7 +278,7 @@ class Transformer(lark.Transformer):
 
     @v_args(inline=True)
     def obs_factor(self, name, params, wires):
-        """create ObservableFactor from name, params and wires."""
+        """Create ``ObservableFactor`` from name, params and wires."""
         params = params[1] if params else []
         return ObservableFactor(name, params, wires)
 
