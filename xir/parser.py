@@ -269,7 +269,7 @@ class Transformer(lark.Transformer):
 
     @v_args(inline=True)
     def obs_stmt(self, pref, factors):
-        """create an ObservableStmt from prefactor and factors."""
+        """Create an ``ObservableStmt`` from prefactor and factors."""
         return ObservableStmt(simplify_math(pref), factors, use_floats=self.use_floats)
 
     def obs_group(self, factors):

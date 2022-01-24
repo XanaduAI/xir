@@ -43,15 +43,14 @@ def _inner_script_parser(debug_parser, parser, debug, kwargs, script):
 
 @lru_cache()
 def _get_parser(debug: bool = False, **kwargs):
-    """
-    Create parser from options.
+    """Create parser from options.
 
     Args:
         debug (bool): if false lark tree building will be skipped, and lark rule collisions
-        will not be given a warning.
-        kwargs: options to be passed to the transformer.
+        will not be given a warning
+        kwargs: options to be passed to the transformer
     Returns:
-        a parsing function.
+        a parsing function
     """
 
     debug_parser = lark.Lark(
@@ -63,13 +62,13 @@ def _get_parser(debug: bool = False, **kwargs):
     )
 
     def _inner_script_parser(script):
-        """
-        Parse a script.
+        """Parse a script.
 
         Args:
-            script (str): xir script as a string.
+            script (str): XIR script as a string
+
         Returns:
-            Program representation of the script.
+            xir.Program: program representation of the script
         """
         parser = lark.Lark(
             grammar=_read_lark_file(),
