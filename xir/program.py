@@ -106,7 +106,7 @@ class Statement:
 
     @property
     def name(self) -> str:
-        """Returns the name of the statement"""
+        """Returns the name of the statement."""
         return self._name
 
     @property
