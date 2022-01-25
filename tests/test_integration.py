@@ -150,11 +150,12 @@ class TestParser:
             simple_script,
         ],
     )
-    def test_parse_and_serialize(self, circuit):
+    def test_parse_and_serialize(self):
         """Test parsing and serializing an XIR script.
 
         Tests parsing, serializing as well as the ``is_equal`` utils function.
         """
+        circuit = qubit_script
         program = xir.parse_script(circuit)
         xir.Validator(program).run()
         result = program.serialize()

@@ -44,7 +44,7 @@ def _get_parser(debug: bool = False, **kwargs):
         maybe_placeholders=True,
         start="program",
         parser="lalr",
-        debug=True,
+        debug=debug,
     )
 
     # TODO: for non-debug mode, add the transformer as an argument to the parser.
