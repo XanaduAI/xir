@@ -44,7 +44,7 @@ def _get_parser(debug: bool = False, **kwargs):
         maybe_placeholders=True,
         start="program",
         parser="lalr",
-        debug=debug,
+        debug=True,
     )
 
     # TODO: for non-debug mode, add the transformer as an argument to the parser.
@@ -67,7 +67,7 @@ def _get_parser(debug: bool = False, **kwargs):
     return _inner_script_parser
 
 
-def parse_script(script: str, debug: bool = True, **kwargs) -> Program:
+def parse_script(script: str, debug: bool = False, **kwargs) -> Program:
     """Parses an XIR script into a structured :class:`xir.Program`.
 
     Args:
