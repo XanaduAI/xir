@@ -71,11 +71,11 @@ def parse_script(script: str, debug: bool = False, **kwargs) -> Program:
     """Parses an XIR script into a structured :class:`xir.Program`.
 
     Args:
-        script (str): xir script as a string.
+        script (str): XIR script as a string.
         debug (bool): if false lark tree building will be skipped, and lark rule collisions
-        will not be given a warning.
-        kwargs: options to be passed to the transformer.
+            will not be given a warning
+
     Returns:
-        Program representation of the script.
+        xir.Program: program representation of the script
     """
     return _get_parser(debug, **kwargs)(script)
