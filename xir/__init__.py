@@ -1,4 +1,4 @@
-from functools import lru_cache, partial
+from functools import lru_cache
 from pathlib import Path
 
 from lark import lark
@@ -25,20 +25,6 @@ def _read_lark_file() -> str:
     path = Path(__file__).parent / "xir.lark"
     with path.open("r") as file:
         return file.read()
-
-def _inner_script_parser(debug_parser, parser, debug, kwargs, script):
-    """
-    Parse a script.
-
-    Args:
-        script (str): xir script as a string.
-    Returns:
-        Program representation of the script.
-    """
-    if debug:
-        tree = debug_parser.parse(script)
-        return Transformer(**kwargs).transform(tree)
-    return parser.parse(script)
 
 
 @lru_cache()
@@ -81,7 +67,7 @@ def _get_parser(debug: bool = False, **kwargs):
     return _inner_script_parser
 
 
-def parse_script(script: str, debug: bool = False, **kwargs) -> Program:
+def parse_script(script: str, debug: bool = True, **kwargs) -> Program:
     """Parses an XIR script into a structured :class:`xir.Program`.
 
     Args:
