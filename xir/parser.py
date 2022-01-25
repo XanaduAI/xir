@@ -26,12 +26,8 @@ class Transformer(lark.Transformer):
     def __init__(self, *args, **kwargs):
         self._eval_pi = kwargs.pop("eval_pi", False)
         self._use_floats = kwargs.pop("use_floats", True)
-        self._program = None
-        super().__init__(*args, **kwargs)
-
-    def _transform_tree(self, tree):
         self._program = Program()
-        return super()._transform_tree(tree)
+        super().__init__(*args, **kwargs)
 
     @property
     def eval_pi(self) -> bool:  # pylint: disable=used-before-assignment
