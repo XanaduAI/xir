@@ -53,13 +53,17 @@ def _get_parser(debug: bool = False, **kwargs):
         a parsing function
     """
 
-    debug_parser = lark.Lark(
+    parser = lark.Lark(
         grammar=_read_lark_file(),
         maybe_placeholders=True,
         start="program",
         parser="lalr",
-        debug=True,
+        debug=debug,
     )
+
+    # TODO: for non-debug mode, add the transformer as an argument to the parser.
+    # This change would produce an additional speedup, although requires changing the Transformer class to be
+    # stateless. (would need to remove self._program)
 
     def _inner_script_parser(script):
         """Parse a script.
@@ -70,19 +74,9 @@ def _get_parser(debug: bool = False, **kwargs):
         Returns:
             xir.Program: program representation of the script
         """
-        parser = lark.Lark(
-            grammar=_read_lark_file(),
-            maybe_placeholders=True,
-            start="program",
-            parser="lalr",
-            debug=False,
-            transformer=Transformer(**kwargs),
-        )
-        
-        if debug:
-            tree = debug_parser.parse(script)
-            return Transformer(**kwargs).transform(tree)
-        return parser.parse(script)
+
+        tree = parser.parse(script)
+        return Transformer(**kwargs).transform(tree)
 
     return _inner_script_parser
 
