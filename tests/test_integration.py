@@ -139,22 +139,23 @@ rx(0) | [0];
 class TestParser:
     """Integration tests for parsing, and serializing, XIR scripts"""
 
-    @pytest.mark.parametrize(
-        "circuit",
-        [
-            qubit_script,
-            photonics_script,
-            photonics_script_no_decl,
-            tdm_script,
-            jet_script,
-            simple_script,
-        ],
-    )
-    def test_parse_and_serialize(self, circuit):
+    # @pytest.mark.parametrize(
+    #     "circuit",
+    #     [
+    #         qubit_script,
+    #         photonics_script,
+    #         photonics_script_no_decl,
+    #         tdm_script,
+    #         jet_script,
+    #         simple_script,
+    #     ],
+    # )
+    def test_parse_and_serialize(self):
         """Test parsing and serializing an XIR script.
 
         Tests parsing, serializing as well as the ``is_equal`` utils function.
         """
+        circuit = qubit_script
         program = xir.parse_script(circuit)
         xir.Validator(program).run()
         result = program.serialize()
