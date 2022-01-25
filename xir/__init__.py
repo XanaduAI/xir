@@ -48,7 +48,8 @@ def _get_parser(debug: bool = False, **kwargs):
     )
 
     # TODO: for non-debug mode, add the transformer as an argument to the parser.
-    # This change would produce an additional speedup, although requires changing the Transformer class to be
+    # This change would produce an additional speedup,
+    # although requires changing the Transformer class to be
     # stateless. (would need to remove self._program)
 
     def _inner_script_parser(script):
