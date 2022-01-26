@@ -107,6 +107,12 @@ class TestValidatorIntegration:
                     "Declaration 'gate Sgate(4.2)[1]' has parameters which are not strings.",
                 ],
             ),
+            (
+                "gate Sgate(4.2)[...];",
+                [
+                    "Declaration 'gate Sgate(4.2)[...]' has parameters which are not strings.",
+                ],
+            ),
         ],
     )
     def test_check_declarations(self, decl, matches):
@@ -437,3 +443,34 @@ class TestValidatorIntegration:
             val = xir.Validator(program)
             val._validators.update(validators)  # pylint: disable=protected-access
             val.run()
+
+    def test_arbitrary_num_wires(self):
+        """Test whether arbitrary num wires works with different numbers of wires"""
+        script = inspect.cleandoc(
+            """
+            gate Sgate(a, b)[...];
+            gate BSgate(theta, phi)[...];
+
+            ctrl[1] BSgate(0.1, 0.0) | [0, 2];
+
+            gate MyGate:
+                Sgate(0.7, 0) | [1];
+                BSgate(0.1, 0.0) | [0, 1];
+                ctrl[1,1] Sgate(0.2, 0) | [0];
+                MooGate | [0, 2];
+            end;
+
+            gate MooGate[0, 2]:
+                Sgate(0, 0) | [0, 2];
+            end;
+
+
+            """
+        )
+        program = xir.parse_script(script)
+
+        val = xir.Validator(program)
+        val._validators.update(  # pylint: disable=protected-access
+            {"statements": True, "definitions": True}
+        )
+        val.run()

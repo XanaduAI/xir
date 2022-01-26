@@ -166,7 +166,7 @@ class Validator:
             * A declaration has parameters which are not strings.
         """
         for decl in (d for l in self._program.declarations.values() for d in l):
-            if len(set(decl.wires)) != len(decl.wires):
+            if decl.wires != ... and len(set(decl.wires)) != len(decl.wires):
                 msg = f"Declaration '{decl}' has duplicate wires labels."
                 self._validation_messages.append(msg)
 
@@ -239,7 +239,7 @@ class Validator:
             self._validation_messages.append(msg)
 
         # check that statements are applied to the correct number of wires
-        if len(stmt.wires) != len(declarations[idx].wires):
+        if declarations[idx].wires != ... and len(stmt.wires) != len(declarations[idx].wires):
             expected = len(declarations[idx].wires)
             msg = f"Statement '{stmt}' has {len(stmt.wires)} wire(s). Expected {expected}."
             self._validation_messages.append(msg)
@@ -414,7 +414,8 @@ class Validator:
                 self._validation_messages.append(msg)
 
             # check if invalid observables are applied
-            words, wires = zip(*stmt.terms)
+            words = [factor.name for factor in stmt.factors]
+            wires = tuple(wire for factor in stmt.factors for wire in factor.wires)
             invalid_words = set(words) - {x.name for x in self._program.declarations["obs"]}
             if invalid_words and not (not self._ignore_includes and self.has_includes):
                 msg = (

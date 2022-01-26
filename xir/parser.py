@@ -1,23 +1,13 @@
 """This module contains the :class:`xir.Transformer` class and the XIR parser."""
 import math
 from decimal import Decimal
-from pathlib import Path
 
 import lark
+from lark import v_args
 
 from .decimal_complex import DecimalComplex
-from .program import Declaration, ObservableStmt, Program, Statement
+from .program import Declaration, ObservableFactor, ObservableStmt, Program, Statement
 from .utils import simplify_math
-
-
-def _read_lark_file() -> str:
-    """Reads the contents of the XIR Lark grammar file."""
-    path = Path(__file__).parent / "xir.lark"
-    with path.open("r") as file:
-        return file.read()
-
-
-parser = lark.Lark(grammar=_read_lark_file(), start="program", parser="lalr")
 
 
 class Transformer(lark.Transformer):
@@ -36,7 +26,6 @@ class Transformer(lark.Transformer):
     def __init__(self, *args, **kwargs):
         self._eval_pi = kwargs.pop("eval_pi", False)
         self._use_floats = kwargs.pop("use_floats", True)
-
         self._program = Program()
         super().__init__(*args, **kwargs)
 
@@ -179,70 +168,23 @@ class Transformer(lark.Transformer):
     # definitions and statements
     ##############################
 
-    def gate_def(self, args):
+    @v_args(inline=True)
+    def gate_def(self, name, params_list, wires, *stmts):
         """Gate definition. Starts with keyword 'gate'. Adds gate to program."""
-        name = args.pop(0)
-        wires = ()
-        params = []
-        stmts = []
 
-        max_wire = 0
-        has_declared_wires = False
-        for i, arg in enumerate(args):
-            if is_param(arg):
-                params = arg[1]
-            elif is_wire(arg):
-                has_declared_wires = True
-                wires = arg[1]
-            elif isinstance(arg, Statement):
-                if has_declared_wires:
-                    stmts = args[i:]
-                    break
-                stmts.append(arg)
+        if not wires:
+            max_wire = 0
+            for stmt in stmts:
+                int_wires = [w for w in stmt.wires if isinstance(w, int)]
+                max_wire = max((max_wire, *int_wires))
 
-                int_wires = [w for w in arg.wires if isinstance(w, int)]
-                if int_wires and max(int_wires) > max_wire:
-                    max_wire = max(int_wires)
+            wires = tuple(range(max_wire + 1))
+        else:
+            # remove duplicate wires while maintaining order
+            wires = tuple(dict.fromkeys(wires))
 
-            if not has_declared_wires:
-                wires = tuple(range(max_wire + 1))
-            else:
-                # remove duplicate wires while maintaining order
-                wires = tuple(dict.fromkeys(wires))
-
+        params = params_list[1] if params_list else []
         self._program.add_gate(name, params, wires, stmts)
-
-    def obs_def(self, args):
-        """Observable definition. Starts with keyword 'obs'. Adds observable to program."""
-        name = args.pop(0)
-        wires = ()
-        params = []
-        stmts = []
-
-        max_wire = 0
-        has_declared_wires = False
-        for i, arg in enumerate(args):
-            if is_param(arg):
-                params = arg[1]
-            elif is_wire(arg):
-                wires = arg[1]
-                has_declared_wires = True
-            elif isinstance(arg, ObservableStmt):
-                if has_declared_wires:
-                    stmts = args[i:]
-                    break
-                stmts.append(arg)
-
-                int_wires = [w for w in arg.wires if isinstance(w, int)]
-                if int_wires and max(int_wires) > max_wire:
-                    max_wire = max(int_wires)
-
-            if not has_declared_wires:
-                wires = tuple(range(max_wire + 1))
-            else:
-                wires = tuple(dict.fromkeys(wires))
-
-        self._program.add_observable(name, params, wires, stmts)
 
     def application_stmt(self, args):
         """Application statement. Can be either a gate statement or an output statement and is
@@ -259,19 +201,19 @@ class Transformer(lark.Transformer):
             if a == "inv":
                 inverse = not inverse
             elif a == "ctrl":
-                ctrl_wires.update(args.pop(0)[1])
+                ctrl_wires.update(args.pop(0))
 
         name = args.pop(0)
         if is_param(args[0]):
             if isinstance(args[0][1], list):
                 params = list(map(simplify_math, args[0][1]))
-                wires = args[1][1]
+                wires = args[1]
             else:  # if dict
                 params = {str(k): simplify_math(v) for k, v in args[0][1].items()}
-                wires = args[1][1]
+                wires = args[1]
         else:
             params = []
-            wires = args[0][1]
+            wires = args[0]
 
         stmt_options = {
             "ctrl_wires": tuple(sorted(ctrl_wires, key=hash)),
@@ -280,69 +222,99 @@ class Transformer(lark.Transformer):
         }
         return Statement(name, params, wires, **stmt_options)
 
-    def obs_stmt(self, args):
-        """Observable statement. Defined inside an observable definition.
+    @v_args(inline=True)
+    def obs_def(self, name, params, wires, statements):
+        """Create an observable definition.
 
-        Returns:
-            ObservableStmt: object containing statement data
+        Creates an observable definition from text of the form:
+
+        .. code-block:: text
+
+            obs my_obs(params)[0, 1]:
+                1, obs_1[0];
+                0.5, obs_2[1];
+            end;
+
+        Args:
+            name: observable name
+            params: observable params
+            wires: observable wires
+            statements: list of statements
+
         """
-        pref = simplify_math(args[0])
-        terms = args[1]
-        return ObservableStmt(pref, terms, use_floats=self.use_floats)
 
-    def obs_group(self, args):
-        """Group of observables used to define an observable statement.
+        if wires is None:
+            max_wire = 0
+            for stmt in statements:
+                for factor in stmt.factors:
+                    int_wires = [w for w in factor.wires if isinstance(w, int)]
+                    if int_wires and max(int_wires) > max_wire:
+                        max_wire = max(int_wires)
 
-        Returns:
-            list[tuple]: each observable with corresponding wires as tuples
-        """
-        return [(args[i], args[i + 1]) for i in range(0, len(args) - 1, 2)]
+            wires = tuple(range(max_wire + 1))
+        else:
+            # remove duplicate wires while maintaining order
+            wires = tuple(dict.fromkeys(wires))
+
+        params = params[1] if params else []
+        self._program.add_observable(name, params, wires, statements)
+
+    def obs_stmt_list(self, stmts):
+        """Observable statement list"""
+        return stmts
+
+    @v_args(inline=True)
+    def obs_stmt(self, pref, factors):
+        """Create an ``ObservableStmt`` from prefactor and factors."""
+        return ObservableStmt(simplify_math(pref), factors, use_floats=self.use_floats)
+
+    def obs_group(self, factors):
+        """Observable Factors"""
+        return factors
+
+    @v_args(inline=True)
+    def obs_factor(self, name, params, wires):
+        """Create ``ObservableFactor`` from name, params and wires."""
+        params = params[1] if params else []
+        return ObservableFactor(name, params, wires)
 
     ################
     # declarations
     ################
 
-    def gate_decl(self, args):
+    @v_args(inline=True)
+    def gate_decl(self, name, params, wires):
         """Gate declaration. Adds declaration to program."""
-        if len(args) == 3:
-            name, params, wires = args[0], args[1][1], args[2][1]
-        else:
-            name, wires = args[0], args[1][1]
-            params = []
-
+        params = params[1] if params else []
         decl = Declaration(name, type_="gate", params=params, wires=wires)
         self._program.add_declaration(decl)
 
-    def obs_decl(self, args):
+    @v_args(inline=True)
+    def obs_decl(self, name, params, wires):
         """Observable declaration. Adds declaration to program."""
-        if len(args) == 3:
-            name, params, wires = args[0], args[1][1], args[2][1]
-        else:
-            name, wires = args[0], args[1][1]
-            params = []
-
+        params = params[1] if params else []
         decl = Declaration(name, type_="obs", params=params, wires=wires)
         self._program.add_declaration(decl)
 
-    def func_decl(self, args):
-        """Function declaration. Adds declaration to program."""
-        if len(args) == 2:
-            name, params = args[0], args[1][1]
-        else:
-            name = args[0]
-            params = []
+    def wire_list(self, args):
+        """List of wires."""
+        return args
 
+    def ARBITRARY_NUM_WIRES(self, _):
+        """Arbitrary number of wires."""
+        return ...
+
+    @v_args(inline=True)
+    def func_decl(self, name, params):
+        """Function declaration. Adds function declaration to program."""
+        params = params[1] if params else []
         decl = Declaration(name, type_="func", params=params)
         self._program.add_declaration(decl)
 
-    def out_decl(self, args):
+    @v_args(inline=True)
+    def out_decl(self, name, params, wires):
         """Output declaration. Adds declaration to program."""
-        if len(args) == 3:
-            name, params, wires = args[0], args[1][1], args[2][1]
-        else:
-            name, wires = args[0], args[1][1]
-            params = []
-
+        params = params[1] if params else []
         decl = Declaration(name, type_="out", params=params, wires=wires)
         self._program.add_declaration(decl)
 

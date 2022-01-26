@@ -106,7 +106,7 @@ class Statement:
 
     @property
     def name(self) -> str:
-        """Returns the name of the gate statement."""
+        """Returns the name of the statement."""
         return self._name
 
     @property
@@ -141,27 +141,54 @@ class Statement:
         return self._use_floats
 
 
+class ObservableFactor:
+    """Observable factor to be used in observable definitions.
+
+    Args:
+        name (str): name of the factor
+        params (Params): the parameters of the factor
+        wires (Sequence[Wire]): the wires this factor acts on
+    """
+
+    def __init__(self, name: str, params: Params, wires: Sequence[Wire]) -> None:
+        self.name = name
+        self.params = params or []
+        self.wires = wires or []
+
+    def __str__(self) -> str:
+        wires = ", ".join(map(str, self.wires))
+        if not self.params:
+            return f"{self.name}[{wires}]"
+        params = ", ".join(map(str, self.params))
+        return f"{self.name}({params})[{wires}]"
+
+
 class ObservableStmt:
     """Observable statements to be used in observable definitions.
 
     Args:
         pref (Decimal, int, str): prefactor to the observable terms
-        terms (list): list of observables and the wire(s) they are applied to
+        factors (list[ObservableFactor]): list of observable factors
+        use_floats(bool): whether floats and complex types are returned instead of ``Decimal``
     """
 
-    def __init__(self, pref: Union[Decimal, int, str], terms: List, use_floats: bool = True):
+    def __init__(
+        self,
+        pref: Union[Decimal, int, str],
+        factors: Sequence[ObservableFactor],
+        use_floats: bool = True,
+    ):
         self._pref = pref
-        self._terms = terms
+        self._factors = factors
 
         self._use_floats = use_floats
 
     def __str__(self) -> str:
         """Serialized string representation of an ObservableStmt."""
-        terms = [f"{t[0]}[{t[1]}]" for t in self.terms]
-        terms_as_string = " @ ".join(terms)
+        factors_as_string = " @ ".join([str(factor) for factor in self._factors])
         pref = str(self.pref)
 
-        return f"{pref}, {terms_as_string}"
+        return f"{pref}, {factors_as_string}"
 
     @property
     def pref(self) -> Union[Decimal, float, int, str]:
@@ -171,9 +198,9 @@ class ObservableStmt:
         return self._pref
 
     @property
-    def terms(self) -> List:
+    def factors(self) -> Sequence[ObservableStmt]:
         """Returns the terms in this observable statement."""
-        return self._terms
+        return self._factors
 
     @property
     def use_floats(self) -> bool:
@@ -183,7 +210,7 @@ class ObservableStmt:
     @property
     def wires(self) -> Sequence[Wire]:
         """Returns the wires this observable statement is applied to."""
-        return tuple(wires for _, wires in self.terms)
+        return tuple(wire for factor in self.factors for wire in factor.wires)
 
 
 class Declaration:
@@ -202,7 +229,7 @@ class Declaration:
         name: str,
         type_: str,
         params: Optional[Sequence[str]] = None,
-        wires: Optional[Sequence[Wire]] = None,
+        wires: Optional[Union[Sequence[Wire], ...]] = None,
     ) -> None:
         if type_ not in ("gate", "out", "obs", "func"):
             raise TypeError(f"Declaration type '{type_}' is invalid.")
@@ -210,7 +237,10 @@ class Declaration:
         self._name = name
         self._type = type_
         self._params = list(params or [])
-        self._wires = tuple(wires or ())
+        if wires == ...:
+            self._wires = ...
+        else:
+            self._wires = tuple(wires or ())
 
     def __str__(self) -> str:
         """Serialized string representation of a declaration."""
@@ -218,7 +248,10 @@ class Declaration:
         if self.params:
             params = "(" + ", ".join(map(str, self.params)) + ")"
         if self.wires:
-            wires = "[" + ", ".join(map(str, self.wires)) + "]"
+            if self.wires == ...:
+                wires = "[...]"
+            else:
+                wires = "[" + ", ".join(map(str, self.wires)) + "]"
 
         return f"{self._type} {self.name}{params}{wires}"
 
@@ -527,7 +560,6 @@ class Program:
                 f"Observable '{name}' already defined."
                 "Replacing old definition with new definition."
             )
-
         self.add_declaration(Declaration(name, "obs", params, wires))
         self._observables[name] = statements
 
