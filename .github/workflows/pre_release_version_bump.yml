@@ -1,0 +1,51 @@
+name: Pre-Release Version Bump
+
+on:
+  workflow_dispatch:
+
+jobs:
+  pre_release_version_bump:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+
+      - uses: actions/checkout@v2
+
+      - name: Derive XIR versions
+        id: versions
+        run: |
+          old_version=`grep -oP '(?<=__version__ = ").*(?=")' xir/_version.py`
+          new_version=${old_version%-dev}
+
+          if [ -z "$old_version" ]; then
+            echo "Failed to parse XIR version from xir/_version.py." && exit 1
+          fi
+
+          echo "::set-output name=old_version::$old_version"
+          echo "::set-output name=new_version::$new_version"
+
+      - name: Bump version in _version.py
+        run:
+          sed -i 's/${{ steps.versions.outputs.old_version }}/${{ steps.versions.outputs.new_version }}/' xir/_version.py
+
+      - name: Bump version in changelog
+        run: |
+          sed -i 's/ (current release)//' .github/CHANGELOG.md
+          sed -i 's/ (development release)/ (current release)/' .github/CHANGELOG.md
+          echo "Hey there, it's \`brackets\`"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          base: main
+          title: Bump version to \`${{ steps.versions.outputs.new_version }}\`
+          body: >
+            This PR bumps the XIR version from \`${{ steps.versions.outputs.old_version }}\`
+            to \`${{ steps.versions.outputs.new_version }}\`.
+          commit-message: Bump version to \`${{ steps.versions.outputs.new_version }}\`
+          branch: pre-release-version-bump
+          reviewers: mandrenkov, thisac
