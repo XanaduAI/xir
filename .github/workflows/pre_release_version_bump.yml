@@ -8,11 +8,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Install Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.9"
-
       - uses: actions/checkout@v2
 
       - name: Derive XIR versions
@@ -36,7 +31,6 @@ jobs:
         run: |
           sed -i 's/ (current release)//' .github/CHANGELOG.md
           sed -i 's/ (development release)/ (current release)/' .github/CHANGELOG.md
-          echo "Hey there, it's \`brackets\`"
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
