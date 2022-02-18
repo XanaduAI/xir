@@ -10,15 +10,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Derive XIR versions
+      - name: Derive versions
         id: versions
         run: |
           old_version=`grep -oP '(?<=__version__ = ").*(?=")' xir/_version.py`
           new_version=${old_version%-dev}
-
-          if [ -z "$old_version" ]; then
-            echo "Failed to parse XIR version from xir/_version.py." && exit 1
-          fi
 
           echo "::set-output name=old_version::$old_version"
           echo "::set-output name=new_version::$new_version"
