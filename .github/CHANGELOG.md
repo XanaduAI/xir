@@ -2,7 +2,8 @@
 
 ### Improvements
 
-* Version bumping is now handled by a pair of GitHub Actions workflows.
+* A pair of GitHub Actions workflows have been added to generate pull requests
+  for pre-release and post-release version bumps, respectively.
   [(#12)](https://github.com/XanaduAI/xir/pull/12)
 
 ### Bug Fixes
