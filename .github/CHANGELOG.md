@@ -1,5 +1,11 @@
 ## Release 0.2.0 (development release)
 
+### Improvements
+
+* A pair of GitHub Actions workflows have been added to generate pull requests
+  for pre-release and post-release version bumps, respectively.
+  [(#12)](https://github.com/XanaduAI/xir/pull/12)
+
 ### Bug Fixes
 
 * The license file is included in the source distribution, even when using `setuptools <56.0.0`.
@@ -9,7 +15,7 @@
 
 This release contains contributions from (in alphabetical order):
 
-[Bastian Zimmermann](https://github.com/BastianZim)
+[Mikhail Andrenkov](https://github.com/Mandrenkov), [Bastian Zimmermann](https://github.com/BastianZim)
 
 ## Release 0.1.1 (current release)
 
@@ -69,7 +75,7 @@ This release contains contributions from (in alphabetical order):
 [Mikhail Andrenkov](https://github.com/Mandrenkov), [Theodor Isacsson](https://github.com/thisac).
 
 
-## Release 0.1.0 (current release)
+## Release 0.1.0
 
 ### New features since last release
 
