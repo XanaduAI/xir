@@ -1,5 +1,10 @@
 ## Release 0.3.0 (development release)
 
+### Bug Fixes
+
+* Ranges are now expanded correctly in wire lists such that `[0..2]` means `[0, 1]`.
+  [(#13)](https://github.com/XanaduAI/xir/pull/13)
+
 ### Contributors
 
 This release contains contributions from (in alphabetical order):
