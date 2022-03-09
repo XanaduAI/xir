@@ -312,3 +312,36 @@ class TestParser:
 
         assert program.declarations["obs"][3].name == "Orange"
         assert program.declarations["obs"][3].wires == expected_wires
+
+    @pytest.mark.parametrize(
+        "script_wires, expected_wires",
+        [
+            (
+                "[0..1]",
+                (0,),
+            ),
+            (
+                "[0..2]",
+                (0, 1),
+            ),
+            (
+                "[2..5]",
+                (2, 3, 4),
+            ),
+            (
+                "[1..3, 4..6]",
+                (1, 2, 4, 5),
+            ),
+            (
+                "[0, 3..6, 7]",
+                (0, 3, 4, 5, 7),
+            ),
+        ],
+    )
+    def test_wire_range(self, script_wires, expected_wires):
+        """Tests that ranges in wire lists are parsed correctly."""
+        script = f"gate Any {script_wires};"
+        program = parse_script(script)
+
+        assert program.declarations["gate"][0].name == "Any"
+        assert program.declarations["gate"][0].wires == expected_wires

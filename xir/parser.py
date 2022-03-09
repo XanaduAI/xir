@@ -1,6 +1,7 @@
 """This module contains the :class:`xir.Transformer` class and the XIR parser."""
 import math
 from decimal import Decimal
+from itertools import chain
 
 import lark
 from lark import v_args
@@ -297,8 +298,9 @@ class Transformer(lark.Transformer):
         self._program.add_declaration(decl)
 
     def wire_list(self, args):
-        """List of wires."""
-        return args
+        """Tuple of wires."""
+        nested = (arg if isinstance(arg, range) else [arg] for arg in args)
+        return tuple(chain(*nested))
 
     def ARBITRARY_NUM_WIRES(self, _):
         """Arbitrary number of wires."""
