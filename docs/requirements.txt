@@ -1,4 +1,10 @@
 docutils<0.17
+# Require ipython_genutils until https://github.com/jupyter/nbconvert/issues/1725
+# is resolved and upstream dependencies have been updated. Otherwise, running the
+# Sphinx build gives:
+#
+#    Could not import extension nbsphinx (exception: No module named 'ipython_genutils').
+ipython_genutils
 m2r2
 nbsphinx
 sphinx-copybutton
