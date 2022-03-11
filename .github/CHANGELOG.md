@@ -1,8 +1,15 @@
 ## Release 0.3.0 (development release)
 
+### Bug Fixes
+
+* Expressions containing subtraction of variables now use the correct operation.
+  [(#17)](https://github.com/XanaduAI/xir/pull/17)
+
 ### Contributors
 
 This release contains contributions from (in alphabetical order):
+
+[Theodor Isacsson](https://github.com/thisac)
 
 ## Release 0.2.1 (current release)
 
