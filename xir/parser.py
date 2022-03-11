@@ -353,7 +353,7 @@ class Transformer(lark.Transformer):
         """
         if all(isinstance(a, (int, Decimal, DecimalComplex)) for a in args):
             return args[0] - args[1]
-        return "(" + " + ".join(map(str, args)) + ")"
+        return "(" + " - ".join(map(str, args)) + ")"
 
     def prod(self, args):
         """Product operation.
