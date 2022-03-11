@@ -3,7 +3,7 @@
 ### Bug Fixes
 
 * Expressions containing subtraction of variables now use the correct operation.
-  [(#16)](https://github.com/XanaduAI/xir/pull/17)
+  [(#17)](https://github.com/XanaduAI/xir/pull/17)
 
 ### Contributors
 
