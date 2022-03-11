@@ -1,4 +1,4 @@
-## Release 0.3.0 (current release)
+## Release 0.2.1 (current release)
 
 ### Bug Fixes
 
