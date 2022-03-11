@@ -1,7 +1,6 @@
 docutils<0.17
 m2r2
-# Below, nbconvert is a dependency of nbsphinx and, prior to the v6.4.3 release,
-# is subject to https://github.com/jupyter/nbconvert/issues/1725.
+# Pin nbconvert to address https://github.com/jupyter/nbconvert/issues/1725.
 nbconvert>=6.4.3
 nbsphinx
 sphinx-copybutton
