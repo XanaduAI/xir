@@ -1,5 +1,7 @@
 docutils<0.17
 m2r2
+# Pin nbconvert to address https://github.com/jupyter/nbconvert/issues/1725.
+nbconvert>=6.4.3
 nbsphinx
 sphinx-copybutton
 sphinx>=3.1.0
