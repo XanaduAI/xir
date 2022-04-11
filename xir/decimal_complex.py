@@ -73,8 +73,8 @@ class DecimalComplex(Complex):
     # pylint: disable=missing-function-docstring
     @convert_input
     def __div__(self, c: Union[Decimal, Complex]) -> DecimalComplex:
-        real = (self.real * c.real + self.imag * c.imag) / (c.real ** 2 + c.imag ** 2)
-        imag = (self.imag * c.real - self.real * c.imag) / (c.real ** 2 + c.imag ** 2)
+        real = (self.real * c.real + self.imag * c.imag) / (c.real**2 + c.imag**2)
+        imag = (self.imag * c.real - self.real * c.imag) / (c.real**2 + c.imag**2)
         return DecimalComplex(real, imag)
 
     # pylint: disable=missing-function-docstring
@@ -95,7 +95,7 @@ class DecimalComplex(Complex):
         raise TypeError("Cannot take floor of DecimalComplex")
 
     def __abs__(self) -> Decimal:
-        return Decimal(self.real ** 2 + self.imag ** 2).sqrt()
+        return Decimal(self.real**2 + self.imag**2).sqrt()
 
     def __pos__(self) -> DecimalComplex:
         return self

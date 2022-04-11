@@ -121,7 +121,7 @@ class TestDecimalComplex:
     )
     def test_power(self, c, po, expected):
         """Test the pow operation"""
-        res = c ** po
+        res = c**po
         assert res.real == pytest.approx(expected.real)
         assert res.imag == pytest.approx(expected.imag)
 
