@@ -9,7 +9,7 @@
 
 * The centralized [Xanadu Sphinx Theme](https://github.com/XanaduAI/xanadu-sphinx-theme)
   is now used to style the Sphinx documentation.
-  [(#18)](https://github.com/XanaduAI/xir/pull/18)
+  [(#20)](https://github.com/XanaduAI/xir/pull/20)
 
 ### Contributors
 
