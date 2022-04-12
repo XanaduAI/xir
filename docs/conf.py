@@ -76,7 +76,7 @@ master_doc = "index"
 
 # General information about the project.
 project = "XIR"
-copyright = "2022 Xanadu Quantum Technologies"
+copyright = "2022, Xanadu Quantum Technologies"
 author = "Xanadu Inc."
 
 # The version info for the project you're documenting, acts as replacement for
@@ -247,7 +247,7 @@ inheritance_node_attrs = dict(color="lightskyblue1", fillcolor="lightskyblue1", 
 # -- Xanadu theme ---------------------------------------------------------
 html_theme = "xanadu"
 
-# xanadu theme options (see theme.conf for more information)
+# Xanadu theme options (see theme.conf for more information).
 html_theme_options = {
     "navbar_name": "XIR",
     "navbar_logo_colour": "#ec9400",
