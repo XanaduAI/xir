@@ -239,10 +239,9 @@ html_sidebars = {
 # Output file base name for HTML help builder.
 htmlhelp_basename = "XIRdoc"
 
-edit_on_github_project = "XanaduAI/xir"
-edit_on_github_branch = "main/docs"
-
-inheritance_node_attrs = dict(color="lightskyblue1", fillcolor="lightskyblue1", style="filled")
+inheritance_node_attrs = dict(
+    color="lightskyblue1", fillcolor="lightskyblue1", style="filled"
+)
 
 # -- Xanadu theme ---------------------------------------------------------
 html_theme = "xanadu"
@@ -267,3 +266,6 @@ html_theme_options = {
     "table_header_background_colour": "#ffdce5",
     "text_accent_colour": "#ec9400",
 }
+
+edit_on_github_project = "XanaduAI/xir"
+edit_on_github_branch = "main/docs"
