@@ -5,11 +5,17 @@
 * Expressions containing subtraction of variables now use the correct operation.
   [(#17)](https://github.com/XanaduAI/xir/pull/17)
 
+### Documentation
+
+* The centralized [Xanadu Sphinx Theme](https://github.com/XanaduAI/xanadu-sphinx-theme)
+  is now used to style the Sphinx documentation.
+  [(#20)](https://github.com/XanaduAI/xir/pull/20)
+
 ### Contributors
 
 This release contains contributions from (in alphabetical order):
 
-[Theodor Isacsson](https://github.com/thisac)
+[Mikhail Andrenkov](https://github.com/Mandrenkov), [Theodor Isacsson](https://github.com/thisac)
 
 ## Release 0.2.1 (current release)
 
