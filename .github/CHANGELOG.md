@@ -1,3 +1,9 @@
+## Release 0.3.2 (development release)
+
+### Contributors
+
+This release contains contributions from (in alphabetical order):
+
 ## Release 0.2.2 (current release)
 
 ### Bug Fixes
