@@ -5,6 +5,9 @@
 * Expressions containing subtraction of variables now use the correct operation.
   [(#17)](https://github.com/XanaduAI/xir/pull/17)
 
+* Running `make dist` now produces an installable source distribution.
+  [(#22)](https://github.com/XanaduAI/xir/pull/22)
+
 ### Documentation
 
 * The centralized [Xanadu Sphinx Theme](https://github.com/XanaduAI/xanadu-sphinx-theme)

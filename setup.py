@@ -4,8 +4,7 @@ import re
 with open("xir/_version.py") as f:
     version = f.readlines()[-1].split()[-1].strip("\"'")
 
-with open("requirements.txt", "r") as f:
-    requirements = re.sub(r"#.*", "", f.read()).split()
+requirements = ["lark-parser>=0.11.0"]
 
 info = {
     "description": "XIR is an intermediate representation (IR) for quantum circuits.",
