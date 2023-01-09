@@ -1,4 +1,4 @@
-## Release 0.3.0 (development release)
+## Release 0.2.2 (current release)
 
 ### Bug Fixes
 
@@ -20,7 +20,7 @@ This release contains contributions from (in alphabetical order):
 
 [Mikhail Andrenkov](https://github.com/Mandrenkov), [Theodor Isacsson](https://github.com/thisac)
 
-## Release 0.2.1 (current release)
+## Release 0.2.1
 
 ### Bug Fixes
 
